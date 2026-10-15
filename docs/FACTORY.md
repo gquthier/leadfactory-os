@@ -7,7 +7,7 @@ La Factory rassemble l'application, le contexte de votre agence et les méthodes
 Avec Node.js **22.12 ou plus récent** et Git :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.5.0 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.5.1 leadfactory init mon-agence
 ```
 
 Le parcours affiche quatre étapes : détecter votre assistant, présenter l’agence, enregistrer le contexte et ouvrir le CEO. Renseignez le nom, l’offre, la cible et le premier objectif ; Entrée accepte « à définir avec mon agent » pour les détails. Aucun clic de lancement supplémentaire : le CEO démarre dès la fin de l’onboarding interactif.
@@ -18,7 +18,7 @@ Le nom de modèle configuré peut être affiché à titre indicatif ; le CLI ne 
 
 Pendant votre conversation, les dépendances verrouillées s’installent et l’application se compile en production, sans écrire de logs dans le terminal de l’assistant. Le navigateur ouvre Setup quand le logiciel est prêt ; les vidéos (environ 1,1 Go) se téléchargent ensuite et sont vérifiées par SHA-256. L’agent peut consulter `.leadfactory/startup.json` et `.leadfactory/setup.log`. Il avance sur le brief pendant la préparation, puis vérifie les API et connecte les outils utiles. Il reçoit les chemins des méthodes dans le projet ; aucune installation globale des skills n’est nécessaire.
 
-`--no-sops` diffère les vidéos ; `npm run factory -- sops` les reprend. `--no-app` ouvre seulement l’assistant. `--no-agent` conserve l’onboarding et affiche le menu sans ouvrir automatiquement une session IA. Avec un autre assistant, choisir **Un autre assistant · copier le contexte**, ouvrir le même dossier et lui transmettre le prompt affiché. Si aucun outil n’est installé, les liens officiels et ce prompt sont proposés.
+`--no-sops` diffère les vidéos ; `npm run factory -- sops` les reprend. `--no-app` désactive le démarrage du logiciel ; pour `install`, cette option permet de terminer après la préparation. `--no-agent` conserve l’onboarding, lance le logiciel, ouvre le navigateur et affiche le menu sans ouvrir automatiquement une session IA. Le logiciel démarre indépendamment de l’assistant, y compris si celui-ci est absent ou échoue. Avec un autre assistant, choisir **Un autre assistant · copier le contexte**, ouvrir le même dossier et lui transmettre le prompt affiché. Si aucun outil n’est installé, les liens officiels et ce prompt sont proposés.
 
 ## Ce que le menu permet
 
@@ -35,7 +35,7 @@ Pendant votre conversation, les dépendances verrouillées s’installent et l�
 | Comprendre le parcours | Explication des étapes et des dossiers |
 | Quitter | Arrêter la préparation et le serveur de cette session |
 
-Le menu se pilote avec ↑/↓ et Entrée, ou un numéro puis Entrée. Les 19 rubriques de navigation suivent exactement l’ordre de la barre latérale du logiciel. `--plain`, `NO_COLOR` ou un terminal étroit activent la version texte sans contrôles ANSI ; `LEADFACTORY_REDUCED_MOTION=1` conserve les couleurs sans animation. Quittez la session de l'assistant pour revenir au menu. Quitter la Factory annule la préparation en cours et arrête uniquement le serveur qu'elle a démarré ; les données restent sur disque. Pour garder seulement le logiciel ouvert : `npm run factory -- start`.
+Le menu se pilote avec ↑/↓ et Entrée, ou un numéro puis Entrée. Les 19 rubriques de navigation suivent exactement l’ordre de la barre latérale du logiciel. `--plain`, `NO_COLOR` ou un terminal étroit activent la version texte sans contrôles ANSI ; `LEADFACTORY_REDUCED_MOTION=1` conserve les couleurs sans animation. Quittez la session de l'assistant pour revenir au menu. Quitter la Factory annule la préparation en cours et arrête uniquement le serveur qu'elle a démarré ; les données restent sur disque. Pour garder seulement le logiciel ouvert : `npm run factory -- start`. `npm run factory -- install` réinstalle les dépendances, compile puis ouvre automatiquement le logiciel ; cette commande reste active jusqu’à Ctrl-C. Utiliser `install --no-app --no-sops` pour une installation automatisée qui termine sans serveur.
 
 ## Reprendre demain
 
@@ -62,7 +62,7 @@ node bin/leadfactory.mjs init ../mon-agence --ref NOM_DE_LA_REVISION
 
 Il refuse d'écraser un dossier existant. La révision doit contenir le CLI, l'application et ses guides. `--no-onboard` permet de télécharger uniquement. Reprendre un dossier existant : `npm run factory -- --project /chemin/mon-agence`.
 
-La commande ci-dessus utilise le tag **v0.5.0** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
+La commande ci-dessus utilise le tag **v0.5.1** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
 
 ## Commandes pour les agents
 

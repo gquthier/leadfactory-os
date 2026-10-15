@@ -33,7 +33,7 @@ process.stdin.resume();process.stdin.once('data',()=>process.exit(Number(process
 '''
 
 
-def scenario(providers, *, plain=False, no_agent=False, cancel=False, failed=False, background=False):
+def scenario(providers, *, plain=False, no_agent=False, cancel=False, failed=False, background=False, command=None, explicit=None):
     with tempfile.TemporaryDirectory(prefix='lf-terminal-') as directory:
         root = Path(directory).resolve()
         for name in ['bin', 'docs', 'full-app/resources/agency-kit/agents', 'full-app/resources/agency-kit/skills', 'fake-bin']:
@@ -58,6 +58,10 @@ def scenario(providers, *, plain=False, no_agent=False, cancel=False, failed=Fal
                'QA_AGENT_EXIT': '7' if failed else '0', 'CODEX_HOME': str(root / 'no-codex'), 'CLAUDE_CONFIG_DIR': str(root / 'no-claude')}
         env.pop('NO_COLOR', None)
         args = [NODE, str(REPO / 'bin/leadfactory.mjs'), '--project', str(root), '--no-app', '--no-open']
+        if command:
+            args.insert(2, command)
+        if explicit:
+            args.extend(['--provider', explicit])
         if background:
             args.remove('--no-app')
             with socket.socket() as probe:
@@ -124,6 +128,11 @@ def scenario(providers, *, plain=False, no_agent=False, cancel=False, failed=Fal
                 if failed:
                     wait_for("s'est arrêté (7)")
             wait_for('Parler à mon CEO')
+            if background and (no_agent or not providers):
+                deadline = time.monotonic() + 10
+                while not (root / 'build-started').exists() and time.monotonic() < deadline:
+                    time.sleep(0.05)
+                assert (root / 'build-started').exists(), 'Software must start independently of the AI session'
             if cancel:
                 send(b'\x03')
             elif plain:
@@ -176,3 +185,7 @@ if __name__ == '__main__':
     scenario('codex', failed=True)
 
     scenario('codex', background=True)
+
+    scenario('codex', no_agent=True, background=True)
+    scenario('codex', no_agent=True, background=True, command='onboard')
+    scenario('', background=True, explicit='codex')

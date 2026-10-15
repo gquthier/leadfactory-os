@@ -1,3 +1,13 @@
+# Correctif 0.5.1 — ouverture automatique du logiciel
+
+La commande `install` prépare désormais l’application, démarre son serveur, attend une réponse HTTP valide puis ouvre Setup dans le navigateur. Elle reste active pour garder le logiciel disponible ; Ctrl-C arrête seulement sa session. `--no-open` désactive uniquement le navigateur ; `install --no-app --no-sops` conserve une installation qui termine sans démarrer de serveur, notamment pour la CI.
+
+Le menu et l’onboarding interactif démarrent le logiciel indépendamment du fournisseur IA. L’ouverture fonctionne aussi avec `--no-agent` ou si l’assistant choisi n’est pas installé. La commande `onboard` revient au menu après la session du CEO au lieu de fermer prématurément le serveur. Les commandes de contexte et l’onboarding JSON restent sans lancement automatique.
+
+Trois tests du vrai processus CLI couvrent `install`, `--no-open` et `--no-app`, avec un serveur HTTP et un lanceur de navigateur de test. Ils contrôlent l’ouverture après disponibilité, le maintien du serveur, une seule installation et la fermeture du port. Trois parcours terminal supplémentaires couvrent le menu sans agent, `onboard --no-agent` et un fournisseur absent. La suite compte maintenant 150 tests racine et 12 parcours terminal. Les résultats de compilation, des tests applicatifs, des types et de l’audit sont publiés dans [GitHub Actions](https://github.com/gquthier/leadfactory-os/actions).
+
+---
+
 # Version 0.5.0 — onboarding et ouverture du CEO
 
 L’installation affiche une identité LeadFactory open source bleue, une animation liée au travail en cours et des étapes lisibles. Les menus fonctionnent avec les flèches ou les numéros ; les 19 rubriques suivent l’ordre de l’application. Le mode `--plain`, `NO_COLOR` et les terminaux étroits suppriment les contrôles ANSI. `LEADFACTORY_REDUCED_MOTION=1` conserve les couleurs sans animation.

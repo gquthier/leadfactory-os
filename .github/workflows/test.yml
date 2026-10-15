@@ -28,7 +28,7 @@ jobs:
       - name: Verify distributable CLI
         run: |
           npm pack --pack-destination "$RUNNER_TEMP"
-          npm exec --yes --package "$RUNNER_TEMP/leadfactory-os-0.5.0.tgz" -- leadfactory --help
+          npm exec --yes --package "$RUNNER_TEMP/leadfactory-os-0.5.1.tgz" -- leadfactory --help
   full-app:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install and build through the actual CLI
-        run: node bin/leadfactory.mjs install --no-sops
+        run: node bin/leadfactory.mjs install --no-app --no-sops
       - run: npm run app:test
       - run: npm run app:typecheck
       - run: npm run test:http --prefix full-app

@@ -22,7 +22,7 @@ const HELP = `LeadFactory — votre agence, son contexte et votre agent.
   npm run factory -- doctor --json      Vérifier l'installation sans appel IA
   npm run factory -- onboard            Présenter ou modifier votre agence
   npm run factory -- guide              Comprendre le parcours
-  npm run factory -- install            Réinstaller les dépendances verrouillées
+  npm run factory -- install            Installer puis ouvrir le logiciel
   npm run factory -- sops               Installer / vérifier la bibliothèque vidéo
   npm run factory -- deploy             Préparer le partage avec votre agent
   npm run factory -- deploy --check --json  Détecter les outils et configurations
@@ -37,7 +37,7 @@ Options :
   --print             Préparer le lancement d'agent sans l'exécuter
   --json              Sortie structurée (context, doctor, onboard, agent --print)
   --no-open           Ne pas ouvrir le navigateur
-  --no-app            Agent sans démarrer l'application
+  --no-app            Ne pas démarrer le logiciel (installation ou agent)
   --ref REVISION       Révision à télécharger avec init (version publiée par défaut)
   --no-onboard        Télécharger uniquement avec init
   --no-agent          Afficher le menu après le brief sans ouvrir le CEO
@@ -270,14 +270,15 @@ function formatDeployment(report) {
  return `\nPARTAGER MON DASHBOARD — diagnostic\n${['supabase','railway','podman'].map(name=>`${name} : ${report[name].installed?'installé':'absent'} · ${labels[report[name].account??report[name].engine]}`).join('\n')}\nConfigurations présentes : Supabase ${report.supabase.projectConfig?'oui':'non'}, Railway ${report.railway.projectConfig?'oui':'non'}, fichier d’environnement ${report.environmentFilePresent?'oui':'non'}.\nPour vérifier les connexions globales : npm run factory -- deploy --check --verify\nLe mode local fonctionne sur votre machine. Le partage Internet nécessite encore la recette d’accès décrite dans docs/DEPLOYMENT.md.\n`;
 }
 
-async function menu(root, args) {
+async function menu(root, args, {launchCEO = false} = {}) {
   terminal();
-  if (!await loadProfile(root)) {
-    await onboard(root, args);
-    if (!args['no-agent']) {
-      try {await runAgent(root, args);}
-      catch (error) {if (interrupted.signal.aborted) return; ui.note(error.message);}
-    }
+  const firstRun = !await loadProfile(root);
+  if (firstRun) await onboard(root, args);
+  // The application belongs to the Factory session, independently of the AI provider.
+  if (!args['no-app']) await prepareServices(root, args);
+  if ((firstRun || launchCEO) && !args['no-agent']) {
+    try {await runAgent(root, args);}
+    catch (error) {if (interrupted.signal.aborted) return; ui.note(error.message);}
   }
   while (!interrupted.signal.aborted) {
     const profile = await loadProfile(root);
@@ -317,6 +318,12 @@ async function menu(root, args) {
   }
 }
 
+async function keepAppOpen(root, args) {
+  await ensureApp(root, args);
+  console.log('Gardez ce terminal ouvert. Ctrl-C arrête cette session locale.');
+  if (!interrupted.signal.aborted) await new Promise(done => interrupted.signal.addEventListener('abort', done, {once: true}));
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   ui = createTerminalUI({plain: !!args.plain});
@@ -341,16 +348,17 @@ async function main() {
     console.log(args.json ? JSON.stringify(context, null, 2) : context.prompt);
   } else if (args.command === 'onboard') {
     await onboard(root, args);
-    if (!args.profile && !args['no-agent']) await runAgent(root, args);
+    if (!args.profile) await menu(root, args, {launchCEO: true});
   }
   else if (args.command === 'agent') await runAgent(root, args);
   else if (args.command === 'sops') await installSops(root,{signal:interrupted.signal});
-  else if (args.command === 'install') {await prepareApp(root,{force:true,signal:interrupted.signal});if(!args['no-sops'])await installSops(root,{signal:interrupted.signal});}
-  else if (args.command === 'start') {
-    await ensureApp(root, args);
-    console.log('Gardez ce terminal ouvert. Ctrl-C arrête cette session locale.');
-    if (!interrupted.signal.aborted) await new Promise(done => interrupted.signal.addEventListener('abort', done, {once: true}));
-  } else await menu(root, args);
+  else if (args.command === 'install') {
+    await prepareApp(root, {force: true, signal: interrupted.signal});
+    if (args['no-app']) {
+      if (!args['no-sops']) await installSops(root, {signal: interrupted.signal});
+    } else await keepAppOpen(root, args);
+  } else if (args.command === 'start') await keepAppOpen(root, args);
+  else await menu(root, args);
 }
 
 try {await main();}
