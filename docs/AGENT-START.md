@@ -22,7 +22,9 @@ Si la mission est une démonstration, utiliser une entreprise explicitement fict
 
 ## Démarrer et écrire dans l'application
 
-`node bin/leadfactory.mjs start --no-open` démarre le logiciel local et reste au premier plan. Garder ce processus vivant pendant le travail. L'URL retournée par `context` ou fournie dans la mission indique le port ; ne pas supposer que 14320 est libre. Le CLI vérifie l'identité du projet avant de réutiliser un serveur.
+Le CEO peut être ouvert avant que le dashboard soit prêt. Lire `.leadfactory/startup.json` s’il existe et vérifier que son `pid` est encore actif. Si `app` vaut `preparing` et ce processus tourne, ne pas relancer d’installation : avancer sur le brief et les accès utiles ; consulter `.leadfactory/setup.log` pour le détail. Si `app` vaut `ready`, vérifier `/api/starter/health` avant les opérations. Un statut laissé par un processus mort n’est pas une preuve de disponibilité. Les SOP se téléchargent après le démarrage du logiciel et ne bloquent pas le setup.
+
+En l’absence de préparation active ou de serveur, `node bin/leadfactory.mjs start --no-open --no-sops` démarre le logiciel local et reste au premier plan. Garder ce processus vivant pendant le travail. L'URL retournée par `context` ou fournie dans la mission indique le port ; ne pas supposer que 14320 est libre. Le CLI vérifie l'identité du projet avant de réutiliser un serveur.
 
 Lire [AGENT-API.md](AGENT-API.md) pour les contrats réellement supportés. Écrire dans les données via HTTP, pour bénéficier des validations et des écritures sérialisées. Ne pas réécrire `full-app/.local-data/db.json` pendant que le serveur fonctionne. Les 23 skills et le cockpit léger de la racine restent disponibles, mais leur `data/` est séparé : ne pas y enregistrer par erreur le résultat destiné à l'application complète.
 
@@ -40,7 +42,7 @@ Un livrable de rédaction peut être préparé avec le compte personnel de l'ass
 
 ## Modifier le logiciel
 
-Pour un changement de code, lire `docs/APP.md`, préserver les tests et les données locales, puis exécuter les vérifications adaptées indiquées dans `AGENTS.md`. Ne pas transformer une mission métier en refonte du logiciel sans nécessité. La licence de `full-app/` reste définie par sa propre notice jusqu'à la décision de publication.
+Pour un changement de code, lire `docs/APP.md`, préserver les tests et les données locales, puis exécuter les vérifications adaptées indiquées dans `AGENTS.md`. Ne pas transformer une mission métier en refonte du logiciel sans nécessité. La version publique est sous MIT ; préserver les attributions de `full-app/NOTICE.md` et les licences des tiers.
 
 ## Setup et partage guidés
 

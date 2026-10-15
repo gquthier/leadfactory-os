@@ -29,6 +29,7 @@ async function fixture(t) {
 test('CLI arguments support agent automation and reject mistakes', () => {
   assert.deepEqual(parseArgs(['context', '--json', '--project', '/tmp/a b']), {command: 'context', json: true, project: '/tmp/a b'});
   assert.equal(parseArgs([]).command, 'menu');
+  assert.equal(parseArgs(['--plain', '--no-agent'])['no-agent'], true);
   assert.equal(parseArgs(['init', 'my-agency', '--no-onboard']).directory, 'my-agency');
   assert.equal(parseArgs(['start', '--port', '14321']).port, 14321);
   for (const args of [['--wat'], ['start', '--port', '0'], ['agent', '--provider'], ['wat'], ['start', 'extra']]) {
@@ -72,6 +73,9 @@ test('agents receive an ordered context map, local agency and only the selected 
   assert.equal(context.skills.length, 1);
   assert.equal(context.roles.length, 1);
   assert.match(context.prompt, /AGENTS.md/);
+  assert.match(context.prompt, /Tu es le CEO/);
+  assert.match(context.prompt, /Agence Exemple/);
+  assert.match(context.prompt, /startup.json/);
   assert.match(context.prompt, /docs\/AGENT-START.md/);
   assert.match(context.prompt, /Préparer mon offre/);
   assert.match(context.prompt, /agents\/roles\/ceo.md/);
@@ -176,4 +180,22 @@ test('terminating a Factory session can abort its foreground agent', async t => 
   const timer = setTimeout(() => controller.abort(), 30);
   t.after(() => clearTimeout(timer));
   await assert.rejects(running, /aborted|abort/i);
+});
+
+test('cancelled background builds terminate their process group before releasing control', {skip: process.platform === 'win32'}, async t => {
+  const root = await fixture(t), controller = new AbortController();
+  const worker = join(root, 'build-worker.mjs');
+  await writeFile(worker, `import fs from 'node:fs';import {spawn} from 'node:child_process';
+    process.on('SIGTERM',()=>{});
+    spawn(process.execPath,['-e',"const fs=require('node:fs');process.on('SIGTERM',()=>{fs.writeFileSync('child-stopped','yes');process.exit(0)});fs.writeFileSync('child-ready','yes');setInterval(()=>{},1000)"],{stdio:'ignore'});
+    setInterval(()=>{},1000);`);
+  const running = launchAgent({command: process.execPath, args: [worker], cwd: root}, {stdio: 'ignore', signal: controller.signal, processGroup: true});
+  // Attach a handler before aborting so the test also catches early rejections.
+  const result = assert.rejects(running, /abort/i);
+  for (let i = 0; i < 100; i++) {
+    if (await readFile(join(root, 'child-ready')).catch(() => null)) break;
+    await new Promise(resolve => setTimeout(resolve, 20));
+  }
+  controller.abort(); await result;
+  assert.equal(await readFile(join(root, 'child-stopped'), 'utf8'), 'yes');
 });

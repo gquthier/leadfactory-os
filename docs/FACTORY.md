@@ -7,31 +7,35 @@ La Factory rassemble l'application, le contexte de votre agence et les méthodes
 Avec Node.js **22.12 ou plus récent** et Git :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.4.1 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.5.0 leadfactory init mon-agence
 ```
 
-Le CLI demande le nom de l'agence, son offre, sa cible, son premier objectif et votre assistant. Vous pouvez répondre « à définir » : votre agent vous aidera à préciser ces points. Choisissez ensuite **Ouvrir ma Factory et lancer mon agent**.
+Le parcours affiche quatre étapes : détecter votre assistant, présenter l’agence, enregistrer le contexte et ouvrir le CEO. Renseignez le nom, l’offre, la cible et le premier objectif ; Entrée accepte « à définir avec mon agent » pour les détails. Aucun clic de lancement supplémentaire : le CEO démarre dès la fin de l’onboarding interactif.
 
-Les dépendances verrouillées sont installées et l’application est compilée en production. Les vidéos (environ 1,1 Go) sont récupérées depuis la release et vérifiées par SHA-256. Utiliser `--no-sops` pour différer les vidéos, puis `npm run factory -- sops` pour les installer. Le navigateur ouvre **Setup**, puis votre assistant démarre dans le projet avec votre brief et le prompt de setup : trouver les accès autorisés, configurer les outils utiles et demander une seule action à la fois quand une clé manque. Le premier téléchargement dépend de la connexion ; le CLI affiche le chemin du journal en cas de problème. Il ne faut pas installer séparément les méthodes dans votre configuration globale : l'agent reçoit leurs chemins dans le projet.
+Codex et Claude Code sont détectés en parallèle via leurs commandes de version et de statut de connexion, sans inférence. Si un seul est installé, il est sélectionné ; si les deux sont présents, le menu propose celui déjà connecté par défaut, ou votre choix précédent. `--provider codex|claude|manual` reste prioritaire. Une connexion détectée correspond à l’état déclaré par l’outil, pas à une vérification de ses crédits ni de l’accès à chaque modèle.
 
-Codex ou Claude Code doit être installé et connecté à votre propre compte. Vérifiez avec `codex --version` ou `claude --version`, puis connectez-vous si nécessaire avec `codex login` ou `claude auth login`. Guides officiels : [Codex CLI](https://developers.openai.com/codex/cli/) et [Claude Code](https://code.claude.com/docs/en/quickstart). Le CLI Factory conserve vos réglages de modèle et de permissions. Une version détectée ne prouve pas l'authentification ou le quota ; l'assistant affiche ses propres demandes de connexion.
+Le nom de modèle configuré peut être affiché à titre indicatif ; le CLI ne le force pas et ne modifie ni les permissions ni les réglages du fournisseur. Les réglages propres au projet restent applicables. Guides officiels : [Codex CLI](https://developers.openai.com/codex/cli/) et [Claude Code](https://code.claude.com/docs/en/quickstart). Si nécessaire, se connecter avec `codex login` ou `claude auth login` ; aucune clé IA n’est copiée dans le profil agence.
 
-Avec un autre assistant, choisissez **recevoir le contexte**, ouvrez le même dossier dans votre outil et donnez-lui le prompt affiché. Aucun fournisseur de remplacement n'est choisi automatiquement.
+Pendant votre conversation, les dépendances verrouillées s’installent et l’application se compile en production, sans écrire de logs dans le terminal de l’assistant. Le navigateur ouvre Setup quand le logiciel est prêt ; les vidéos (environ 1,1 Go) se téléchargent ensuite et sont vérifiées par SHA-256. L’agent peut consulter `.leadfactory/startup.json` et `.leadfactory/setup.log`. Il avance sur le brief pendant la préparation, puis vérifie les API et connecte les outils utiles. Il reçoit les chemins des méthodes dans le projet ; aucune installation globale des skills n’est nécessaire.
+
+`--no-sops` diffère les vidéos ; `npm run factory -- sops` les reprend. `--no-app` ouvre seulement l’assistant. `--no-agent` conserve l’onboarding et affiche le menu sans ouvrir automatiquement une session IA. Avec un autre assistant, choisir **Un autre assistant · copier le contexte**, ouvrir le même dossier et lui transmettre le prompt affiché. Si aucun outil n’est installé, les liens officiels et ce prompt sont proposés.
 
 ## Ce que le menu permet
 
 | Action | Résultat |
 | --- | --- |
-| Ouvrir ma Factory et lancer mon agent | Application et assistant prêts pour le premier livrable |
+| Parler à mon CEO | Session de votre assistant avec le contexte agence ; logiciel préparé en arrière-plan |
 | Naviguer dans la Factory | Accès direct au dashboard, clients, campagnes, CRM, résultats, ressources et finances |
 | Confier une mission | Onboarding, acquisition, campagne, création, delivery ou reprise |
-| Comprendre le parcours | Explication des étapes et des dossiers |
 | Modifier le brief | Actualiser l'offre et la cible sans effacer les décisions |
-| Vérifier mon installation | Node, Git, assistants, dépendances et méthodes présentes |
-| Afficher le contexte | Prompt utilisable par un autre assistant |
+| Changer mon assistant | Choisir un outil installé ou copier le contexte |
 | Partager mon dashboard | Vérifier les configurations existantes et préparer Railway, Supabase ou Podman avec l’agent |
+| Vérifier mon installation | Node, Git, assistants, dépendances et méthodes présentes |
+| Copier le contexte | Prompt utilisable par un autre assistant |
+| Comprendre le parcours | Explication des étapes et des dossiers |
+| Quitter | Arrêter la préparation et le serveur de cette session |
 
-Le menu se pilote avec un numéro puis Entrée. Quittez la session de l'assistant pour revenir au menu. Quitter la Factory arrête uniquement le serveur qu'elle a démarré ; les données restent sur disque. Pour garder seulement le logiciel ouvert : `npm run factory -- start`.
+Le menu se pilote avec ↑/↓ et Entrée, ou un numéro puis Entrée. Les 19 rubriques de navigation suivent exactement l’ordre de la barre latérale du logiciel. `--plain`, `NO_COLOR` ou un terminal étroit activent la version texte sans contrôles ANSI ; `LEADFACTORY_REDUCED_MOTION=1` conserve les couleurs sans animation. Quittez la session de l'assistant pour revenir au menu. Quitter la Factory annule la préparation en cours et arrête uniquement le serveur qu'elle a démarré ; les données restent sur disque. Pour garder seulement le logiciel ouvert : `npm run factory -- start`.
 
 ## Reprendre demain
 
@@ -41,6 +45,7 @@ Relancez `npm run factory`, puis **Confier une mission → Reprendre la dernièr
 | --- | --- |
 | `.leadfactory/profile.json` et `CONTEXT.md` | Brief de votre agence, sans identifiants de connexion |
 | `.leadfactory/NEXT.md` et `DECISIONS.md` | Travail à reprendre, résultats vérifiés et décisions |
+| `.leadfactory/startup.json` et `setup.log` | État et journal de la préparation ; vérifier que le PID est toujours actif |
 | `.leadfactory/clients/<id>/` | Notes et livrables de travail du client concerné |
 | `full-app/.local-data/` | Données affichées dans l'application et connexions locales séparées |
 | `full-app/resources/agency-kit/` | Huit rôles et 39 méthodes incluses dans le dépôt |
@@ -57,7 +62,7 @@ node bin/leadfactory.mjs init ../mon-agence --ref NOM_DE_LA_REVISION
 
 Il refuse d'écraser un dossier existant. La révision doit contenir le CLI, l'application et ses guides. `--no-onboard` permet de télécharger uniquement. Reprendre un dossier existant : `npm run factory -- --project /chemin/mon-agence`.
 
-La commande ci-dessus utilise le tag **v0.4.1** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
+La commande ci-dessus utilise le tag **v0.5.0** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
 
 ## Commandes pour les agents
 
@@ -90,7 +95,7 @@ Exemple de profil pour un setup sans questions :
 - **Port utilisé :** choisissez `--port 14321`. La Factory refuse de confondre deux projets sur le même port.
 - **Installation interrompue :** Ctrl-C nettoie les verrous. Après une coupure brutale seulement, vérifier qu’aucune installation ne tourne, retirer le dossier vide `.leadfactory/install.lock` ou `full-app/public/sops/.install-lock` indiqué dans l’erreur, puis relancer. Pour réparer les dépendances, lancer `npm run factory -- install`, puis le menu. Les fichiers métier sont conservés.
 - **Assistant absent ou non connecté :** installez/connectez votre assistant avec son guide officiel ; `context` reste disponible.
-- **Serveur arrêté :** lisez `.leadfactory/app.log`, corrigez l'erreur puis relancez. Le mode local reste lié à `127.0.0.1`.
+- **Préparation ou serveur arrêté :** lisez `.leadfactory/setup.log` puis `.leadfactory/app.log`, corrigez l'erreur puis relancez. Le mode local reste lié à `127.0.0.1`.
 - **Terminal distant sans navigateur :** ajoutez `--no-open` et utilisez l'adresse affichée depuis la même machine.
 
 La recette du CLI cible macOS et Linux. Windows natif reste à tester ; utiliser WSL en attendant sa validation. Les intégrations payantes et l'authentification distante ont leur propre recette, distincte du démarrage local.

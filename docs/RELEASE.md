@@ -1,3 +1,25 @@
+# Version 0.5.0 — onboarding et ouverture du CEO
+
+L’installation affiche une identité LeadFactory open source bleue, une animation liée au travail en cours et des étapes lisibles. Les menus fonctionnent avec les flèches ou les numéros ; les 19 rubriques suivent l’ordre de l’application. Le mode `--plain`, `NO_COLOR` et les terminaux étroits suppriment les contrôles ANSI. `LEADFACTORY_REDUCED_MOTION=1` conserve les couleurs sans animation.
+
+Le CLI détecte Codex et Claude Code en parallèle, consulte leur statut de connexion et affiche éventuellement le modèle configuré. Il ne lance pas d’inférence pour ce diagnostic, ne copie pas les identifiants et ne force ni modèle ni permissions. Un seul outil installé est sélectionné automatiquement ; deux outils donnent un choix ; aucun outil donne les liens d’installation et le prompt à transmettre à un autre assistant.
+
+Après quatre réponses sur l’agence, le CEO s’ouvre automatiquement dans le projet avec le brief, les chemins de mémoire, le rôle CEO et le prompt de setup. Le logiciel se prépare en arrière-plan, puis le navigateur s’ouvre et les SOP se téléchargent. `.leadfactory/startup.json` et `setup.log` permettent à l’agent de suivre ce travail. Les vidéos et leur catalogue restent ceux de la bibliothèque immuable 0.4.0.
+
+## Recette de cette évolution
+
+- 147 tests du CLI, du cockpit et des méthodes réussis localement.
+- Neuf parcours en vrai pseudo-terminal : Codex seul, Claude seul, choix entre les deux, mode texte simple, aucun fournisseur, ouverture différée, Ctrl-C, échec du fournisseur et CEO actif pendant une compilation bloquée.
+- Ces parcours utilisent des exécutables de test : ils vérifient le lancement, les arguments, le brief, la prise du terminal, le retour au menu et l’arrêt des travaux, sans consommer de compte IA.
+- Détection en lecture des deux outils réellement installés et de leur état de connexion sur macOS.
+- Serveur Next.js réel, compilation déjà en cache : retour immédiat pendant la préparation, contrôle HTTP local puis deux demandes d’arrêt concurrentes ; port fermé sans erreur.
+- Un nouveau test reproduit le sous-processus de compilation laissé actif lors d’une annulation. Les compilations s’exécutent désormais dans leur propre groupe de processus, terminé avant de relâcher le verrou d’installation.
+- La CI reprend les neuf parcours de terminal et les tests sur macOS/Linux, Node 22/24, ainsi que l’installation, la compilation, les tests HTTP et l’audit de production de l’application. Les journaux [GitHub Actions](https://github.com/gquthier/leadfactory-os/actions) donnent le résultat de chaque révision.
+
+Les sessions connectées indiquées par les outils ne prouvent pas leurs crédits, l’accès effectif à un modèle ou les intégrations métier. Le périmètre local et les limites de dépendances ci-dessous restent applicables.
+
+---
+
 # Correctif 0.4.1 — 15 octobre 2026
 
 La recette publique de 0.4.0 a mis en évidence deux demandes concurrentes de fermeture lors d’un Ctrl-C. Si le serveur attendait encore une connexion HTTP, les deux appels pouvaient tenter de tuer le même groupe de processus et lever `kill EPERM` sur macOS. Le correctif partage une seule promesse de fermeture et n’envoie chaque signal qu’une fois. Un test reproduisant un serveur qui ignore SIGTERM a échoué sur 0.4.0 avec cette même erreur ; il couvre désormais l’arrêt forcé et la concurrence des demandes.

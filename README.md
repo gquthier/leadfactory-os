@@ -8,7 +8,7 @@ Un espace local pour organiser les clients, préparer les campagnes, suivre les 
 
 [![Vérifications](https://github.com/gquthier/leadfactory-os/actions/workflows/test.yml/badge.svg)](https://github.com/gquthier/leadfactory-os/actions/workflows/test.yml)
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.4.1-blue)](https://github.com/gquthier/leadfactory-os/releases/tag/v0.4.1)
+[![Version](https://img.shields.io/badge/version-0.5.0-blue)](https://github.com/gquthier/leadfactory-os/releases/tag/v0.5.0)
 
 [Installer](docs/INSTALL.md) · [Comprendre le parcours](docs/FACTORY.md) · [Pour les agents](docs/AGENT-START.md) · [Contribuer](CONTRIBUTING.md)
 
@@ -19,12 +19,14 @@ Un espace local pour organiser les clients, préparer les campagnes, suivre les 
 Avec **Node.js 22.12+ et Git**, sur macOS ou Linux :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.4.1 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.5.0 leadfactory init mon-agence
 ```
 
-Présentez votre agence, choisissez votre assistant et ouvrez votre Factory. Le CLI télécharge le projet, installe ses dépendances, compile l’application, récupère les ressources puis ouvre **Setup**. Votre agent reçoit le brief, les méthodes utiles et la première mission.
+Une installation animée, quatre réponses, puis **votre CEO prend la main**. Le CLI détecte Codex et Claude Code sur votre machine ; s’ils sont tous les deux installés, vous choisissez. Votre assistant s’ouvre automatiquement dans le projet avec le brief de l’agence, son rôle, sa mémoire et la mission de setup.
 
-Le CLI est distribué depuis le tag GitHub public : aucun compte npm ou accès privé au dépôt n’est nécessaire. Prévoyez environ 4 Go libres et quelques minutes au premier lancement. Les vidéos représentent 1,1 Go ; ajoutez `--no-sops` pour les installer plus tard.
+Le dashboard se prépare silencieusement en arrière-plan et ouvre **Setup** dès qu’il est prêt. Les vidéos se téléchargent ensuite : elles ne retardent pas votre première conversation. Les menus au clavier suivent le même ordre que l’application.
+
+Le CLI est distribué depuis le tag GitHub public : aucun compte npm ou accès privé au dépôt n’est nécessaire. Prévoyez environ 4 Go libres et quelques minutes au premier lancement. Les vidéos représentent 1,1 Go ; ajoutez `--no-sops` pour les installer plus tard. `--plain` désactive les animations et `--no-agent` permet de rester au menu après le brief.
 
 ## Du contexte aux livrables
 

@@ -3,9 +3,12 @@ import {createInterface} from 'node:readline/promises';
 import {readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {parseArgs, findProject, cloneProject, loadProfile, saveProfile, contextForAgent,
-  doctor, probeVersion, agentCommand, launchAgent, DEFAULT_PORT, RELEASE_REF} from '../lib/factory.mjs';
-import {createFactoryApp, openBrowser, prepareApp} from '../lib/factory-runtime.mjs';
+  doctor, agentCommand, launchAgent, DEFAULT_PORT, RELEASE_REF} from '../lib/factory.mjs';
+import {openBrowser, prepareApp} from '../lib/factory-runtime.mjs';
 import {installSops} from '../lib/factory-sops.mjs';
+import {createTerminalUI, selectOption} from '../lib/factory-ui.mjs';
+import {detectAgents, preferredAgent} from '../lib/factory-detection.mjs';
+import {startFactoryServices} from '../lib/factory-startup.mjs';
 import {SETUP_TASK} from '../full-app/runtime/setup-prompt.mjs';
 import {deploymentCheck, deploymentPrompt} from '../lib/factory-deploy.mjs';
 
@@ -37,6 +40,8 @@ Options :
   --no-app            Agent sans démarrer l'application
   --ref REVISION       Révision à télécharger avec init (version publiée par défaut)
   --no-onboard        Télécharger uniquement avec init
+  --no-agent          Afficher le menu après le brief sans ouvrir le CEO
+  --plain             Interface texte simple, sans animation ni menu à flèches
   --no-sops           Différer le téléchargement des vidéos (environ 1,1 Go)
   --target railway|supabase|podman  Destination du parcours de partage
   --check             Diagnostic de partage uniquement, sans agent ni déploiement
@@ -49,8 +54,9 @@ le serveur qu'elle a démarré. Les données et la mémoire restent dans le proj
 const GUIDE = `Votre parcours dans la Factory
 
 1. Présentez l'agence : offre, cible et objectif. Ce brief reste dans le projet.
-2. Choisissez votre assistant personnel. Il reçoit le brief et la carte des méthodes.
-3. L'agent fait le setup : il trouve les accès autorisés et vous guide pour les clés manquantes.
+2. Codex et Claude Code sont détectés. Si les deux sont présents, choisissez votre assistant.
+3. Le CEO s'ouvre avec votre brief ; le logiciel se prépare en arrière-plan.
+   L'agent fait le setup : il trouve les accès autorisés et vous guide pour les clés manquantes.
 4. L'agent complète le brief, prépare la campagne et enregistre les livrables.
 5. Consultez le résultat dans la Factory, puis confiez la prochaine mission.
 
@@ -65,10 +71,15 @@ API locales et exemples : docs/AGENT-API.md
 `;
 
 const sections = [
-  ['Démarrer et connecter mes outils', '/admin/start-here'], ['Vue de mon agence', '/admin/dashboard'],
-  ['Clients et briefs', '/admin/clients'], ['Campagnes', '/admin/campaigns'],
-  ['Leads et CRM', '/admin/crm'], ['Résultats', '/admin/results'], ['Agents et équipe', '/admin/agents'],
-  ['Ressources et SOP', '/admin/resources'], ['Finances', '/admin/finances'],
+  ['Start Here', '/admin/start-here'], ['Agents IA', '/admin/agents'],
+  ['Dashboard', '/admin/dashboard'], ['Pipeline', '/admin/pipeline'],
+  ['Onboarding', '/admin/onboarding'], ['Clients', '/admin/clients'],
+  ['Résultats', '/admin/results'], ['Campagnes', '/admin/campaigns'],
+  ['Leads', '/admin/leads'], ['CRM', '/admin/crm'], ['Team', '/admin/team'],
+  ['Finance', '/admin/finances'], ['Activité', '/admin/activity'],
+  ['Formations', '/admin/formations'], ['Meta Ads', '/admin/meta'],
+  ['UGC Scripts', '/admin/ugc/montage'], ['Ressources', '/admin/resources'],
+  ['Webhooks', '/admin/webhooks'], ['Paramètres', '/admin/settings'],
 ];
 const missions = [
   ['Faire le setup et connecter mes outils', 'ceo', SETUP_TASK],
@@ -80,13 +91,13 @@ const missions = [
   ['Reprendre la dernière mission', 'ceo', 'Reprendre .leadfactory/NEXT.md, constater ce qui est déjà fait puis réaliser la prochaine action autorisée.'],
 ];
 
-let input, app, agentActive = false;
+let input, services, detected, ui = createTerminalUI(), agentActive = false;
 const interrupted = new AbortController();
 function releaseInput() {const previous = input; input = null; previous?.close();}
 function onSignal() {
   if (agentActive) return; // The foreground agent handles its own Ctrl-C.
   interrupted.abort(); releaseInput();
-  void app?.stop();
+  void services?.stop().catch(() => {});
 }
 function onTerminate() {agentActive = false; onSignal();}
 process.on('SIGINT', onSignal);
@@ -95,7 +106,7 @@ process.on('SIGTERM', onTerminate);
 function terminal() {
   if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error('Ce menu nécessite un terminal. Pour un agent : onboard --profile FICHIER, context --json ou doctor --json.');
   if (!input) {
-    const current = createInterface({input: process.stdin, output: process.stdout});
+    const current = createInterface({input: process.stdin, output: process.stdout, terminal: ui.styled});
     input = current;
     current.once('close', () => {if (input === current) onSignal();});
   }
@@ -106,6 +117,11 @@ async function ask(label, fallback = '') {
   return answer.trim() || fallback;
 }
 async function choose(title, options, defaultIndex = 0) {
+  if (ui.styled) {
+    releaseInput();
+    try {return await selectOption(title, options, {selected: defaultIndex, signal: interrupted.signal});}
+    catch (error) {if (error.name === 'AbortError') onSignal(); throw error;}
+  }
   console.log(`\n${title}`);
   options.forEach((option, index) => console.log(`  ${index + 1}. ${option}`));
   for (;;) {
@@ -113,6 +129,39 @@ async function choose(title, options, defaultIndex = 0) {
     if (Number.isInteger(answer) && answer >= 1 && answer <= options.length) return answer - 1;
     console.log('Choisissez un numéro de la liste.');
   }
+}
+
+async function findAgents() {
+  detected ??= await ui.task('Détection de vos assistants', () => detectAgents());
+  for (const agent of detected) {
+    const status = !agent.installed ? 'non installé' : agent.authentication === 'ready' ? 'session connectée'
+      : agent.authentication === 'login_required' ? 'connexion nécessaire' : 'connexion à vérifier à l’ouverture';
+    ui.note(`${agent.label}${agent.version ? ' ' + agent.version : ''} · ${status}${agent.model ? ' · modèle configuré : ' + agent.model : ''}`);
+  }
+  return detected;
+}
+
+async function chooseProvider(previous, explicit) {
+  const agents = await findAgents();
+  if (explicit) return explicit;
+  const installed = agents.filter(agent => agent.installed);
+  const preferred = preferredAgent(agents, previous);
+  if (installed.length === 1 && previous !== 'manual') {
+    ui.success(`${installed[0].label} sélectionné automatiquement`);
+    return installed[0].id;
+  }
+  if (!installed.length) {
+    ui.note('Installez Codex : https://developers.openai.com/codex/cli');
+    ui.note('Ou Claude Code : https://code.claude.com/docs/en/setup');
+    ui.note('Votre brief reste utilisable avec un autre assistant : le prompt sera affiché.');
+    return 'manual';
+  }
+  const providers = [...installed.map(agent => agent.id), 'manual'];
+  const selected = await choose('Votre assistant personnel', [
+    ...installed.map(agent => `${agent.label}${agent.authentication === 'ready' ? ' · connecté' : ' · connexion à vérifier'}`),
+    'Un autre assistant · copier le contexte',
+  ], Math.max(0, providers.indexOf(preferred)));
+  return providers[selected];
 }
 
 async function onboard(root, args) {
@@ -123,55 +172,69 @@ async function onboard(root, args) {
   }
   terminal();
   const previous = await loadProfile(root);
-  console.log('\nLEADFACTORY — Faisons connaissance\nVotre agent s’appuiera sur ce brief pour vous aider à démarrer.');
+  ui.step(1, 'Votre assistant, déjà chez vous');
+  const provider = await chooseProvider(previous?.provider, args.provider);
+  ui.step(2, 'Présentez votre agence');
+  ui.note('Quatre réponses. Entrée pour définir les détails avec votre CEO.');
   let agency = await ask('Nom de votre agence', previous?.agency);
   while (!agency) agency = await ask('Nom de votre agence (requis)');
   const offer = await ask('Votre offre', previous?.offer || 'À définir avec mon agent');
   const audience = await ask('Votre client idéal', previous?.audience || 'À définir avec mon agent');
   const objective = await ask('Votre premier objectif', previous?.objective || 'Préparer mon offre et mon premier dossier client');
-  const codex = probeVersion('codex'), claude = probeVersion('claude');
-  const providers = ['codex', 'claude', 'manual'];
-  const defaultProvider = previous?.provider || (codex ? 'codex' : claude ? 'claude' : 'manual');
-  const selected = args.provider || providers[await choose('Votre assistant personnel', [
-    `Codex ${codex ? '— installé' : '— à installer'}`, `Claude Code ${claude ? '— installé' : '— à installer'}`, 'Un autre assistant — recevoir le contexte',
-  ], providers.indexOf(defaultProvider))];
-  const profile = await saveProfile(root, {agency, offer, audience, objective, provider: selected,
+  ui.step(3, 'Votre CEO reçoit le contexte');
+  const profile = await saveProfile(root, {agency, offer, audience, objective, provider,
     language: previous?.language || 'fr', port: args.port ?? previous?.port ?? DEFAULT_PORT});
-  console.log('\nVotre contexte est prêt. Il sera retrouvé à chaque nouvelle mission.');
+  ui.success('Brief, mémoire et prochaine action enregistrés dans votre projet');
+  const context = await contextForAgent(root);
+  ui.note(`${context.roles.length} rôles · ${context.skills.length} méthodes · les instructions du CEO sont prêtes`);
   return profile;
 }
 
+async function prepareServices(root, args) {
+  const profile = await loadProfile(root), port = args.port ?? profile?.port ?? DEFAULT_PORT;
+  if (services && (services.state.url !== `http://127.0.0.1:${port}` || ['error', 'stopped'].includes(services.state.app))) {
+    await services.stop(); services = null;
+  }
+  services ??= await startFactoryServices(root, {port, noSops: !!args['no-sops'], noOpen: !!args['no-open'], signal: interrupted.signal});
+  return services;
+}
+
 async function ensureApp(root, args, path = '/admin/start-here') {
-  if (!args['no-sops']) await installSops(root,{signal:interrupted.signal});
-  const profile = await loadProfile(root);
-  const port = args.port ?? profile?.port ?? DEFAULT_PORT;
-  if (app && app.url !== `http://127.0.0.1:${port}`) {await app.stop(); app = null;}
-  app ??= createFactoryApp(root, {port,signal:interrupted.signal});
-  let started;
-  try {started = await app.start();}
-  catch (error) {app = null; throw error;}
-  const {url} = started;
-  console.log(`\nFactory ouverte : ${url}${path}`);
+  const job = await prepareServices(root, {...args, 'no-open': true});
+  const url = job.state.app === 'ready' ? job.state.url : await ui.task('Préparation du dashboard · première installation parfois longue', () => job.ready);
+  ui.success(`Factory ouverte : ${url}${path}`);
   if (!args['no-open'] && !openBrowser(url + path)) console.log('Ouvrez cette adresse dans votre navigateur.');
   return url;
 }
 
 async function runAgent(root, args) {
   const context = await contextForAgent(root, args);
-  const provider = args.provider ?? context.profile?.provider ?? 'codex';
-  if (args.print || provider === 'manual') {
-    if (provider === 'manual' && !args.print && !args['no-app']) await ensureApp(root, args);
-    console.log(args.json ? JSON.stringify({provider, ...context}, null, 2) : `\nContexte à transmettre à votre assistant :\n\n${context.prompt}`);
+  let provider = args.provider ?? context.profile?.provider;
+  if (!provider) provider = args.print ? 'codex' : preferredAgent(await findAgents());
+  if (args.print) {
+    console.log(args.json ? JSON.stringify({provider, ...context}, null, 2) : context.prompt);
+    return;
+  }
+  if (provider === 'manual') {
+    if (!args['no-app']) await prepareServices(root, args);
+    console.log(`\nContexte à transmettre à votre assistant :\n\n${context.prompt}`);
     return;
   }
   if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error('Le lancement interactif nécessite un terminal. Utilisez agent --print --json pour préparer la mission sans appeler un modèle.');
-  if (!probeVersion(provider)) throw new Error(`${provider} n'est pas installé. Voir docs/FACTORY.md ; le contexte reste disponible avec context. Aucun assistant de remplacement n'a été lancé.`);
-  if (!args['no-app']) await ensureApp(root, args);
-  console.log(`\n${provider} démarre dans votre projet. Quittez sa session pour revenir au menu Factory.\n`);
+  const agents = detected ?? await findAgents(), agent = agents.find(item => item.id === provider);
+  if (!agent?.installed) throw new Error(`${provider} n'est pas installé. Installez-le puis relancez la Factory, ou changez d'assistant dans le menu. Le contexte reste disponible avec context.`);
+  if (agent.authentication === 'login_required') ui.note(`${agent.label} demandera votre connexion à l’ouverture. Votre compte et ses permissions restent gérés par cet outil.`);
+  if (!args['no-app']) {
+    await prepareServices(root, args);
+    ui.note('Le dashboard se prépare en arrière-plan. Les SOP se téléchargent ensuite.');
+    ui.note('État pour votre CEO : .leadfactory/startup.json · Journal : .leadfactory/setup.log');
+  }
+  ui.step(4, `${agent.label} · votre CEO prend la main`);
+  ui.note('Quittez sa session pour revenir à la Factory. Votre modèle et vos permissions sont conservés.');
   releaseInput();
   agentActive = true;
   try {await launchAgent(agentCommand(provider, root, context.prompt), {signal: interrupted.signal});}
-  finally {agentActive = false;}
+  finally {agentActive = false; detected = null;}
 }
 
 async function showDoctor(root, args) {
@@ -209,28 +272,43 @@ function formatDeployment(report) {
 
 async function menu(root, args) {
   terminal();
-  if (!await loadProfile(root)) await onboard(root, args);
+  if (!await loadProfile(root)) {
+    await onboard(root, args);
+    if (!args['no-agent']) {
+      try {await runAgent(root, args);}
+      catch (error) {if (interrupted.signal.aborted) return; ui.note(error.message);}
+    }
+  }
   while (!interrupted.signal.aborted) {
     const profile = await loadProfile(root);
-    const option = await choose(`\n┌─ LEADFACTORY · ${profile.agency}\n│  ${root}\n└─ Votre agence et votre agent, au même endroit`, [
-      'Ouvrir ma Factory et lancer mon agent', 'Naviguer dans la Factory', 'Confier une mission à mon agent',
-      'Comprendre le parcours', 'Modifier le brief de mon agence', 'Vérifier mon installation',
-      'Afficher le contexte de mon agent', 'Quitter', 'Partager mon dashboard / préparer le déploiement',
+    if (services) ui.note(services.state.message);
+    const option = await choose(`LeadFactory · ${profile.agency}`, [
+      'Parler à mon CEO', 'Naviguer dans la Factory', 'Confier une mission à mon agent',
+      'Modifier le brief de mon agence', 'Changer mon assistant', 'Partager mon dashboard / déploiement',
+      'Vérifier mon installation', 'Copier le contexte de mon agent', 'Comprendre le parcours', 'Quitter',
     ]);
     try {
       if (option === 0) await runAgent(root, args);
       else if (option === 1) {
-        const selected = await choose('Où voulez-vous aller ?', sections.map(([name]) => name));
-        await ensureApp(root, args, sections[selected][1]);
+        const selected = await choose('Les menus de votre Factory', [...sections.map(([name]) => name), 'Revenir']);
+        if (selected < sections.length) await ensureApp(root, args, sections[selected][1]);
       } else if (option === 2) {
-        const selected = await choose('Quelle mission ?', [...missions.map(([name]) => name), 'Une autre mission']);
+        const selected = await choose('Quelle mission ?', [...missions.map(([name]) => name), 'Une autre mission', 'Revenir']);
+        if (selected === missions.length + 1) continue;
         const [, role, task] = missions[selected] || ['', 'ceo', await ask('Décrivez la mission')];
         await runAgent(root, {...args, role, task});
-      } else if (option === 3) console.log(GUIDE);
-      else if (option === 4) await onboard(root, args);
-      else if (option === 5) await showDoctor(root, args);
-      else if (option === 6) console.log((await contextForAgent(root, args)).prompt);
-      else if (option === 8) await shareDashboard(root,args);
+      } else if (option === 3) await onboard(root, args);
+      else if (option === 4) {
+        detected = null;
+        const agents = await findAgents();
+        const installed = agents.filter(agent => agent.installed), providers = [...installed.map(agent => agent.id), 'manual'];
+        const choice = await choose('Changer mon assistant', [...installed.map(agent => agent.label), 'Un autre assistant · copier le contexte'], Math.max(0, providers.indexOf(profile.provider)));
+        await saveProfile(root, {...profile, provider: providers[choice]});
+        delete args.provider;
+      } else if (option === 5) await shareDashboard(root, args);
+      else if (option === 6) await showDoctor(root, args);
+      else if (option === 7) console.log((await contextForAgent(root, args)).prompt);
+      else if (option === 8) console.log(GUIDE);
       else return;
     } catch (error) {
       if (interrupted.signal.aborted) return;
@@ -241,24 +319,30 @@ async function menu(root, args) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  ui = createTerminalUI({plain: !!args.plain});
   if (args.help) {console.log(HELP); return;}
   if (args.command === 'guide') {console.log(GUIDE); return;}
   const [major, minor] = process.versions.node.split('.').map(Number);
   if (major < 22 || major === 22 && minor < 12) throw new Error('Installez Node.js 22.12 ou plus récent pour la Factory.');
   let root;
   if (args.command === 'init') {
-    root = await cloneProject(args.directory, {ref: args.ref || RELEASE_REF});
+    ui.banner();
+    root = await ui.task('Installation de LeadFactory open source', () => cloneProject(args.directory, {ref: args.ref || RELEASE_REF, stdio: ui.styled ? 'ignore' : 'inherit', signal: interrupted.signal}));
     console.log(`\nProjet et méthodes téléchargés dans ${root}`);
     if (args['no-onboard']) return;
     await menu(root, args); return;
   }
   root = await findProject(args.project || process.cwd());
+  if (['menu', 'onboard', 'agent', 'start'].includes(args.command) && !args.json && !args.print && !args.profile && process.stdout.isTTY) ui.banner();
   if (args.command === 'doctor') await showDoctor(root, args);
   else if(args.command==='deploy')await shareDashboard(root,args);
   else if (args.command === 'context') {
     const context = await contextForAgent(root, args);
     console.log(args.json ? JSON.stringify(context, null, 2) : context.prompt);
-  } else if (args.command === 'onboard') await onboard(root, args);
+  } else if (args.command === 'onboard') {
+    await onboard(root, args);
+    if (!args.profile && !args['no-agent']) await runAgent(root, args);
+  }
   else if (args.command === 'agent') await runAgent(root, args);
   else if (args.command === 'sops') await installSops(root,{signal:interrupted.signal});
   else if (args.command === 'install') {await prepareApp(root,{force:true,signal:interrupted.signal});if(!args['no-sops'])await installSops(root,{signal:interrupted.signal});}
@@ -274,7 +358,7 @@ catch (error) {
   if (!interrupted.signal.aborted) {console.error(`LeadFactory : ${error.message}`); process.exitCode = 1;}
 } finally {
   releaseInput();
-  await app?.stop();
+  try {await services?.stop();} catch (error) {console.error(`Arrêt du logiciel : ${error.message}`); process.exitCode = 1;}
   process.removeListener('SIGINT', onSignal); process.removeListener('SIGTERM', onTerminate);
   if (interrupted.signal.aborted) process.exitCode = 130;
 }
