@@ -1,0 +1,11 @@
+*
+!full-app/
+!full-app/**
+full-app/node_modules/
+full-app/.next/
+full-app/.local-data/
+full-app/.env*
+full-app/**/*.log
+full-app/test-results/
+full-app/playwright-report/
+full-app/*.tsbuildinfo

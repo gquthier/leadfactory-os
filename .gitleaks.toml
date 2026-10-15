@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Known client questionnaire field identifiers, not credentials"
+condition = "AND"
+paths = ['''^full-app/src/app/client/settings/brief/brief-sections\.ts$''']
+regexTarget = "secret"
+regexes = ['''^d_cible[12]_(description|fonctions|problemes|motivations|valeur|freins)$''']

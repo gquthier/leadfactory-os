@@ -1,0 +1,36 @@
+{
+  "name": "leadfactory-os",
+  "version": "0.4.0",
+  "description": "Votre agence de lead generation, ses méthodes et votre agent IA : un espace local, prêt à démarrer.",
+  "type": "module",
+  "bin": {
+    "leadfactory": "bin/leadfactory.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "factory": "node bin/leadfactory.mjs",
+    "start": "node server.mjs",
+    "test": "node scripts/test.mjs",
+    "app:install": "npm ci --prefix full-app",
+    "app:dev": "npm run dev --prefix full-app",
+    "app:build": "npm run build --prefix full-app",
+    "app:start": "npm start --prefix full-app",
+    "app:test": "npm test --prefix full-app",
+    "app:typecheck": "npm run typecheck --prefix full-app"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gquthier/leadfactory-os.git"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "resources/",
+    "full-app/runtime/setup-prompt.mjs",
+    "README.md",
+    "LICENSE"
+  ]
+}

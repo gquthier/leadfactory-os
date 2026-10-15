@@ -1,0 +1,504 @@
+{
+  "version": 1,
+  "release": "v0.4.0",
+  "files": [
+    {
+      "path": "01-partager-acces-meta/video.mp4",
+      "asset": "01-partager-acces-meta--video.mp4",
+      "bytes": 154699428,
+      "sha256": "45eb04252a86249983d3ce3b5074753de12845d66e865404c5317a80b5f260a2"
+    },
+    {
+      "path": "01-partager-acces-meta/captions.vtt",
+      "asset": "01-partager-acces-meta--captions.vtt",
+      "bytes": 7743,
+      "sha256": "7125f9bfeb628c3f1693abd9584253cf7dd39b69d76adc15ad156e61d348a0a8"
+    },
+    {
+      "path": "01-partager-acces-meta/chapters.vtt",
+      "asset": "01-partager-acces-meta--chapters.vtt",
+      "bytes": 738,
+      "sha256": "ba8dd4e467e1bc9df5229b7315d65ab5215dbf19ecd4fb0b82c61b758d569683"
+    },
+    {
+      "path": "01-partager-acces-meta/FICHE.md",
+      "asset": "01-partager-acces-meta--FICHE.md",
+      "bytes": 6409,
+      "sha256": "c02e3c2dc43a0c32792b0e8033232cead53898b9d532a45f76ea19148fdc6c04"
+    },
+    {
+      "path": "01-partager-acces-meta/apercu.png",
+      "asset": "01-partager-acces-meta--apercu.png",
+      "bytes": 272954,
+      "sha256": "0cc5f70445d336b3c78a198461750244959d1faa00dda9582c0a840576819047"
+    },
+    {
+      "path": "02-configurer-outils/video.mp4",
+      "asset": "02-configurer-outils--video.mp4",
+      "bytes": 84324179,
+      "sha256": "84a8195e889585d2a447400503edfca915b85e31d68c3051b4937bbd38b80ca3"
+    },
+    {
+      "path": "02-configurer-outils/captions.vtt",
+      "asset": "02-configurer-outils--captions.vtt",
+      "bytes": 4859,
+      "sha256": "00b2f3309b192310c3481b5cf0c8b14c0a891041a714ce5cf860cbc204529812"
+    },
+    {
+      "path": "02-configurer-outils/chapters.vtt",
+      "asset": "02-configurer-outils--chapters.vtt",
+      "bytes": 482,
+      "sha256": "088c34e7f47e0bff26ee43006dfd4428a845eb571a9b870551f3fb9793443214"
+    },
+    {
+      "path": "02-configurer-outils/FICHE.md",
+      "asset": "02-configurer-outils--FICHE.md",
+      "bytes": 4698,
+      "sha256": "4eee7492be943010bbbee9d3b7d778ead8584974dce54f61157d9af290bdb71b"
+    },
+    {
+      "path": "02-configurer-outils/apercu.png",
+      "asset": "02-configurer-outils--apercu.png",
+      "bytes": 327886,
+      "sha256": "da7189d1fac86c5fc9e12465852434b4480972d73a23a284274cffe803499e0a"
+    },
+    {
+      "path": "03-demarrer-reprendre-agent/video.mp4",
+      "asset": "03-demarrer-reprendre-agent--video.mp4",
+      "bytes": 87648784,
+      "sha256": "11ddbf59dfad963e5c4004b1df8f7fb2dc0f642a71b3e089ae8dce827d434567"
+    },
+    {
+      "path": "03-demarrer-reprendre-agent/captions.vtt",
+      "asset": "03-demarrer-reprendre-agent--captions.vtt",
+      "bytes": 4888,
+      "sha256": "08e174221414bdaa94e06b318caf39cd95fa7ec351d35eab000d61db6a8cfa94"
+    },
+    {
+      "path": "03-demarrer-reprendre-agent/chapters.vtt",
+      "asset": "03-demarrer-reprendre-agent--chapters.vtt",
+      "bytes": 473,
+      "sha256": "fb44bf82b745de644282fca608c53c942237f39ca68e603b6cb276213b4135b9"
+    },
+    {
+      "path": "03-demarrer-reprendre-agent/FICHE.md",
+      "asset": "03-demarrer-reprendre-agent--FICHE.md",
+      "bytes": 5082,
+      "sha256": "2f253886ecb5ccf5f63e85cfca89a0a299422d645c27bfb4671b559676b8fcbc"
+    },
+    {
+      "path": "03-demarrer-reprendre-agent/apercu.png",
+      "asset": "03-demarrer-reprendre-agent--apercu.png",
+      "bytes": 335838,
+      "sha256": "16edc41acee01efa28492f39616c99a44b5aed09b19be29aa0a46f588744ffb4"
+    },
+    {
+      "path": "04-creer-client-brief/video.mp4",
+      "asset": "04-creer-client-brief--video.mp4",
+      "bytes": 114185785,
+      "sha256": "5dd1d1b32977e4b6009925d9ba9193353c1ff41bf86252a1e46740c73aff6cac"
+    },
+    {
+      "path": "04-creer-client-brief/captions.vtt",
+      "asset": "04-creer-client-brief--captions.vtt",
+      "bytes": 7435,
+      "sha256": "5bf0854585ee030d33e356deed049eb5a16215e7d65056b6c4b7a82e6e51e48e"
+    },
+    {
+      "path": "04-creer-client-brief/chapters.vtt",
+      "asset": "04-creer-client-brief--chapters.vtt",
+      "bytes": 498,
+      "sha256": "11abfab8eee49049367952efbc21cd161aca8c8e6dcc71519b35ccaa6f5d4788"
+    },
+    {
+      "path": "04-creer-client-brief/FICHE.md",
+      "asset": "04-creer-client-brief--FICHE.md",
+      "bytes": 4693,
+      "sha256": "a943705838cb256367609814ed62bc8acc2487ad367d05d3838eb76af0f374a4"
+    },
+    {
+      "path": "04-creer-client-brief/apercu.png",
+      "asset": "04-creer-client-brief--apercu.png",
+      "bytes": 300517,
+      "sha256": "de951b0f1d35fce933bf8975ef7b49b827b6b0a3b7f18ead9e92f3969028a1fe"
+    },
+    {
+      "path": "05-preparer-campagne/video.mp4",
+      "asset": "05-preparer-campagne--video.mp4",
+      "bytes": 79277396,
+      "sha256": "410c589ff5785365d3e341d845b95bd66053afcd8a94cb8dee1c89a1d7926423"
+    },
+    {
+      "path": "05-preparer-campagne/captions.vtt",
+      "asset": "05-preparer-campagne--captions.vtt",
+      "bytes": 4530,
+      "sha256": "33d36058bb0d099ae597cd6e9ba763d90f05cc7e8fcae1b17d606145b3778665"
+    },
+    {
+      "path": "05-preparer-campagne/chapters.vtt",
+      "asset": "05-preparer-campagne--chapters.vtt",
+      "bytes": 453,
+      "sha256": "e6ea609c0dcaaa594ff01ade7e15883c7311c1ee5b468277d4f6a8f158aff129"
+    },
+    {
+      "path": "05-preparer-campagne/FICHE.md",
+      "asset": "05-preparer-campagne--FICHE.md",
+      "bytes": 3171,
+      "sha256": "b385560a276c1bc6aa05eaebe2c0cff9af0af6f80c5cd8d4bbc9f76418ee8cc6"
+    },
+    {
+      "path": "05-preparer-campagne/apercu.png",
+      "asset": "05-preparer-campagne--apercu.png",
+      "bytes": 371939,
+      "sha256": "0b46a75221812deb2b475ae9b5a441a64518354b250e463466ecf84969db37f8"
+    },
+    {
+      "path": "06-gerer-leads-crm/video.mp4",
+      "asset": "06-gerer-leads-crm--video.mp4",
+      "bytes": 89003629,
+      "sha256": "338d6dbd09768e96f830005a6d538143d1be577f7c629bed7737a2d7f6991ebb"
+    },
+    {
+      "path": "06-gerer-leads-crm/captions.vtt",
+      "asset": "06-gerer-leads-crm--captions.vtt",
+      "bytes": 6301,
+      "sha256": "5aaa64adc7f3049e8d3c190a1568768fc3327ca30197e9b813cbf8f748b16188"
+    },
+    {
+      "path": "06-gerer-leads-crm/chapters.vtt",
+      "asset": "06-gerer-leads-crm--chapters.vtt",
+      "bytes": 428,
+      "sha256": "f506b9d75c4d9208887c5c4f4cdfae3b7faca1781522e84c0fb02e156df5d290"
+    },
+    {
+      "path": "06-gerer-leads-crm/FICHE.md",
+      "asset": "06-gerer-leads-crm--FICHE.md",
+      "bytes": 5814,
+      "sha256": "e4672761ee16ef69cb7a695fe02a9464de05037084cb40404eb3b6a90b1e0582"
+    },
+    {
+      "path": "06-gerer-leads-crm/apercu.png",
+      "asset": "06-gerer-leads-crm--apercu.png",
+      "bytes": 338827,
+      "sha256": "8f54fee10be684469ef98f22bcfc3c9bef3985eeb463a49dd5f4555e76ae8b57"
+    },
+    {
+      "path": "07-utiliser-bibliotheque-sop/video.mp4",
+      "asset": "07-utiliser-bibliotheque-sop--video.mp4",
+      "bytes": 69370685,
+      "sha256": "5602c0c4d96ca60c0326ffbe04b8b8651813fdc79bac89d3cc375d8a6e435516"
+    },
+    {
+      "path": "07-utiliser-bibliotheque-sop/captions.vtt",
+      "asset": "07-utiliser-bibliotheque-sop--captions.vtt",
+      "bytes": 3755,
+      "sha256": "411abc8bff9f7361b8f7f9e46a5ebe87f813bb47f09c9bfd17040d8458d7e34e"
+    },
+    {
+      "path": "07-utiliser-bibliotheque-sop/chapters.vtt",
+      "asset": "07-utiliser-bibliotheque-sop--chapters.vtt",
+      "bytes": 355,
+      "sha256": "a9bb8ded9e68e9994e3a21d5e0c6afa4bd8ca88f48985115dda0e39d107d0867"
+    },
+    {
+      "path": "07-utiliser-bibliotheque-sop/FICHE.md",
+      "asset": "07-utiliser-bibliotheque-sop--FICHE.md",
+      "bytes": 3767,
+      "sha256": "f5922cceb287e4aec8161c7fca74595e7467ccf3b05dce7828fe9e7a6a15f7e7"
+    },
+    {
+      "path": "07-utiliser-bibliotheque-sop/apercu.png",
+      "asset": "07-utiliser-bibliotheque-sop--apercu.png",
+      "bytes": 351561,
+      "sha256": "6fb2378b13cdde304e7234959f167e73f7bb363ae720846fe5eaef21747d0edc"
+    },
+    {
+      "path": "08-sauvegarder-restaurer/video.mp4",
+      "asset": "08-sauvegarder-restaurer--video.mp4",
+      "bytes": 85340712,
+      "sha256": "5a418dee85bc990a3d586497433f62563244f0947d3f679eb672878f108b292f"
+    },
+    {
+      "path": "08-sauvegarder-restaurer/captions.vtt",
+      "asset": "08-sauvegarder-restaurer--captions.vtt",
+      "bytes": 5210,
+      "sha256": "2b76dd80553dbc9ac404067725b08f40a51ceb7cadd81df55e54eedf18b6c7fb"
+    },
+    {
+      "path": "08-sauvegarder-restaurer/chapters.vtt",
+      "asset": "08-sauvegarder-restaurer--chapters.vtt",
+      "bytes": 451,
+      "sha256": "665111f44c01ab0d36840c1dc542c2ed7f1b37146b50f5d62648f5f1348edf3e"
+    },
+    {
+      "path": "08-sauvegarder-restaurer/FICHE.md",
+      "asset": "08-sauvegarder-restaurer--FICHE.md",
+      "bytes": 5937,
+      "sha256": "58ab614a81365e35dacaa5da25d0fca7fa971d86ab9cb0296c3773ae8edf01c3"
+    },
+    {
+      "path": "08-sauvegarder-restaurer/apercu.png",
+      "asset": "08-sauvegarder-restaurer--apercu.png",
+      "bytes": 337311,
+      "sha256": "8c0cc51a7bbb24c7f1809f2fc6e3a4720e1c55049b7087708383e28dbdd85b72"
+    },
+    {
+      "path": "09-preparer-brief-client/video.mp4",
+      "asset": "09-preparer-brief-client--video.mp4",
+      "bytes": 46854497,
+      "sha256": "b9e43e4f396d144dedfdc833863430a258a7aa96764e97a97fc55bfa0d7470c2"
+    },
+    {
+      "path": "09-preparer-brief-client/captions.vtt",
+      "asset": "09-preparer-brief-client--captions.vtt",
+      "bytes": 3156,
+      "sha256": "c09907d08b414c767ff05cc99edfadb582eb819d859bd0d3c9caa82c7e62d308"
+    },
+    {
+      "path": "09-preparer-brief-client/chapters.vtt",
+      "asset": "09-preparer-brief-client--chapters.vtt",
+      "bytes": 394,
+      "sha256": "e812717462e6d1cb0dd6e0f49860623093494d678acc8b4cb15268518bf381d9"
+    },
+    {
+      "path": "09-preparer-brief-client/FICHE.md",
+      "asset": "09-preparer-brief-client--FICHE.md",
+      "bytes": 3154,
+      "sha256": "0bd9fbfed55a7cc98607b0c98697ef24d8914fa4acf9051ea5b3b9638907565d"
+    },
+    {
+      "path": "09-preparer-brief-client/apercu.png",
+      "asset": "09-preparer-brief-client--apercu.png",
+      "bytes": 351638,
+      "sha256": "89faff9934f9ac8a631a9289ca75d5a6dd54ea5d6aa3f07744e18fcd3305aff3"
+    },
+    {
+      "path": "09-preparer-brief-client/index.html",
+      "asset": "09-preparer-brief-client--index.html",
+      "bytes": 3412,
+      "sha256": "f80fbae3aaa65710394d1fd9c9d45e96c57ef214ef1f56b3cc19cb5489870110"
+    },
+    {
+      "path": "10-controler-acces-mission/video.mp4",
+      "asset": "10-controler-acces-mission--video.mp4",
+      "bytes": 51307430,
+      "sha256": "0f24c362bbb9c3cdcf3030e8353debbdeb5577f601bb6e5cff3ee8515ae89535"
+    },
+    {
+      "path": "10-controler-acces-mission/captions.vtt",
+      "asset": "10-controler-acces-mission--captions.vtt",
+      "bytes": 3359,
+      "sha256": "1c472d706378ad2c274fafe3900dd9f382c6e543f34e4d3386728a663c46a1d2"
+    },
+    {
+      "path": "10-controler-acces-mission/chapters.vtt",
+      "asset": "10-controler-acces-mission--chapters.vtt",
+      "bytes": 395,
+      "sha256": "072076c6c3158f6e93046378bfefba5d0f2f3da3ab3e85581a3f0e803fe94790"
+    },
+    {
+      "path": "10-controler-acces-mission/FICHE.md",
+      "asset": "10-controler-acces-mission--FICHE.md",
+      "bytes": 3334,
+      "sha256": "fbfd2a3fb2f2f7af47eb65afca73f28c8e7af57ff46f1d775a6d15548388f39d"
+    },
+    {
+      "path": "10-controler-acces-mission/apercu.png",
+      "asset": "10-controler-acces-mission--apercu.png",
+      "bytes": 348012,
+      "sha256": "a26f316febceb335d92e7804059f15d61f71b2ee2a1792d907afdf125e39214b"
+    },
+    {
+      "path": "10-controler-acces-mission/index.html",
+      "asset": "10-controler-acces-mission--index.html",
+      "bytes": 3491,
+      "sha256": "c01463991aac805e64f9ec52cc805d9b34d7550dbe11249674bf8dc8f468036c"
+    },
+    {
+      "path": "11-recevoir-les-leads/video.mp4",
+      "asset": "11-recevoir-les-leads--video.mp4",
+      "bytes": 49824390,
+      "sha256": "8eeea4f7a92bfb508e14a6a785c39e8a980c1c5db88ac3cc0a94b097083ecdc3"
+    },
+    {
+      "path": "11-recevoir-les-leads/captions.vtt",
+      "asset": "11-recevoir-les-leads--captions.vtt",
+      "bytes": 3263,
+      "sha256": "b7a67b17756dc034ef1e14ec123eb9207eae53a30b4842988285a14a3079ca38"
+    },
+    {
+      "path": "11-recevoir-les-leads/chapters.vtt",
+      "asset": "11-recevoir-les-leads--chapters.vtt",
+      "bytes": 400,
+      "sha256": "fd4a0211b7f53f8c78a93456866a1b18cbc132e13ebd7c1b6f13019184612381"
+    },
+    {
+      "path": "11-recevoir-les-leads/FICHE.md",
+      "asset": "11-recevoir-les-leads--FICHE.md",
+      "bytes": 3277,
+      "sha256": "44668286f4f70d7e293dc253ca3fbc4f5176c6b475043b9ee5e7a97167b61693"
+    },
+    {
+      "path": "11-recevoir-les-leads/apercu.png",
+      "asset": "11-recevoir-les-leads--apercu.png",
+      "bytes": 338847,
+      "sha256": "0ebfa1324ffc87c8927b4a5a2ee5227953033d9187550647b33d802726c79311"
+    },
+    {
+      "path": "11-recevoir-les-leads/index.html",
+      "asset": "11-recevoir-les-leads--index.html",
+      "bytes": 3455,
+      "sha256": "be9229833015af12c6ded9ffb28bcd7078f90cc958d4d1a84c99fa4b44497ea9"
+    },
+    {
+      "path": "12-contacter-et-relancer/video.mp4",
+      "asset": "12-contacter-et-relancer--video.mp4",
+      "bytes": 50049458,
+      "sha256": "d44e6f50fa87a261846752cae845c8be17d030416302139125bddd15108822fa"
+    },
+    {
+      "path": "12-contacter-et-relancer/captions.vtt",
+      "asset": "12-contacter-et-relancer--captions.vtt",
+      "bytes": 3156,
+      "sha256": "300a657c10e057925d71fdd5867959d3fb3fe7a489ca1e89766e129e57156082"
+    },
+    {
+      "path": "12-contacter-et-relancer/chapters.vtt",
+      "asset": "12-contacter-et-relancer--chapters.vtt",
+      "bytes": 390,
+      "sha256": "cd667ab4efa8dc732d08acb71c7d9bb365b24de0e70a24a4b2b35b5adfdf9c0f"
+    },
+    {
+      "path": "12-contacter-et-relancer/FICHE.md",
+      "asset": "12-contacter-et-relancer--FICHE.md",
+      "bytes": 3215,
+      "sha256": "6730302eed52b507ad19fc2c201b781cc7d7c6bda8226686f4aa1efd0bb26714"
+    },
+    {
+      "path": "12-contacter-et-relancer/apercu.png",
+      "asset": "12-contacter-et-relancer--apercu.png",
+      "bytes": 368659,
+      "sha256": "850f316744548bd5be5e6c25e6b6a1cde222f3a66efb056f8e839d6158d2b062"
+    },
+    {
+      "path": "12-contacter-et-relancer/index.html",
+      "asset": "12-contacter-et-relancer--index.html",
+      "bytes": 3448,
+      "sha256": "76ae5350e714b3ae573522adf16a790a39517eed64ce621670e776fafbbcf0f8"
+    },
+    {
+      "path": "13-qualifier-un-prospect/video.mp4",
+      "asset": "13-qualifier-un-prospect--video.mp4",
+      "bytes": 49153060,
+      "sha256": "91c30a416042eb772a648b81ceeabe498221cf7dbf78723f284ba1f5a0d1f7c5"
+    },
+    {
+      "path": "13-qualifier-un-prospect/captions.vtt",
+      "asset": "13-qualifier-un-prospect--captions.vtt",
+      "bytes": 3236,
+      "sha256": "344163a401e8afa9c1fd4f80cbfa94e0a92a370b8b3c9b777651c2e5765570f9"
+    },
+    {
+      "path": "13-qualifier-un-prospect/chapters.vtt",
+      "asset": "13-qualifier-un-prospect--chapters.vtt",
+      "bytes": 408,
+      "sha256": "f870c3dd10bd567a208670d47b57726b60cfbabb178e81616e56cc7aba5983cb"
+    },
+    {
+      "path": "13-qualifier-un-prospect/FICHE.md",
+      "asset": "13-qualifier-un-prospect--FICHE.md",
+      "bytes": 3270,
+      "sha256": "db3d810d3f4f81b7445b4587ec48e65b1bf9f82ead258576c3026ce106c7db0b"
+    },
+    {
+      "path": "13-qualifier-un-prospect/apercu.png",
+      "asset": "13-qualifier-un-prospect--apercu.png",
+      "bytes": 353451,
+      "sha256": "cdf1865fd89ddd3feb24af3e6b0fd80c503ab37066209814a5d852c9bd2ef5c0"
+    },
+    {
+      "path": "13-qualifier-un-prospect/index.html",
+      "asset": "13-qualifier-un-prospect--index.html",
+      "bytes": 3449,
+      "sha256": "155547f167a10cc448ed2644807be64c1c1e6c1e77623445f1d0b0620b1f069a"
+    },
+    {
+      "path": "14-feedback-qualite-leads/video.mp4",
+      "asset": "14-feedback-qualite-leads--video.mp4",
+      "bytes": 48418058,
+      "sha256": "9abf8f2660afee2f9ca22b1fc7991ce607c274da16352e8b5af622c36d2a9a40"
+    },
+    {
+      "path": "14-feedback-qualite-leads/captions.vtt",
+      "asset": "14-feedback-qualite-leads--captions.vtt",
+      "bytes": 3323,
+      "sha256": "1254a4b6925e62dc69b49f24fbd29053ffa3662772be8bebbe81d9ab4cd1ed8a"
+    },
+    {
+      "path": "14-feedback-qualite-leads/chapters.vtt",
+      "asset": "14-feedback-qualite-leads--chapters.vtt",
+      "bytes": 381,
+      "sha256": "5b700ada0713a4dbb5a9a0eef35ae10498163677054abda4804167b9ba7fe30b"
+    },
+    {
+      "path": "14-feedback-qualite-leads/FICHE.md",
+      "asset": "14-feedback-qualite-leads--FICHE.md",
+      "bytes": 3250,
+      "sha256": "d78eaf9f9262eeef30ef3b0c530a05a44cd731917df6114be796aa1cb3261dd9"
+    },
+    {
+      "path": "14-feedback-qualite-leads/apercu.png",
+      "asset": "14-feedback-qualite-leads--apercu.png",
+      "bytes": 329855,
+      "sha256": "0ce5189f106f6c231277445b1ec0dd240c7b143cb82c92f2b90e54f2505f754b"
+    },
+    {
+      "path": "14-feedback-qualite-leads/index.html",
+      "asset": "14-feedback-qualite-leads--index.html",
+      "bytes": 3411,
+      "sha256": "fa4307d0a5df75d14b5e2da7657ae9198512b719a154774c74e80a20ecf2e169"
+    },
+    {
+      "path": "15-valider-creatives-offre/video.mp4",
+      "asset": "15-valider-creatives-offre--video.mp4",
+      "bytes": 48233741,
+      "sha256": "f3e5ce073d1ca5dae42f2d2920dbb317507f7490459e3569e76414bf76bae5f2"
+    },
+    {
+      "path": "15-valider-creatives-offre/captions.vtt",
+      "asset": "15-valider-creatives-offre--captions.vtt",
+      "bytes": 3289,
+      "sha256": "b82886325aeb05fb656a57549c33ed1a0d38ab892b98d3fcc41b8b77f409f66c"
+    },
+    {
+      "path": "15-valider-creatives-offre/chapters.vtt",
+      "asset": "15-valider-creatives-offre--chapters.vtt",
+      "bytes": 390,
+      "sha256": "4c80d11def4d4d641f77a18be4e1a6f03e5bf3cc23812393780b062c131bb2c1"
+    },
+    {
+      "path": "15-valider-creatives-offre/FICHE.md",
+      "asset": "15-valider-creatives-offre--FICHE.md",
+      "bytes": 3255,
+      "sha256": "5e8f89b2f4711490f89c94f0d80de5f90a107cec1efb6266f7366ef1fda950e1"
+    },
+    {
+      "path": "15-valider-creatives-offre/apercu.png",
+      "asset": "15-valider-creatives-offre--apercu.png",
+      "bytes": 321062,
+      "sha256": "db7ccd68c3f73f2ff3376caabbc0f055dd0cc6c011b7990b2ee28cd02c814455"
+    },
+    {
+      "path": "15-valider-creatives-offre/index.html",
+      "asset": "15-valider-creatives-offre--index.html",
+      "bytes": 3446,
+      "sha256": "a564c03f5c85f3b4e4def1d82ef8d33eb812668d75c8049007b6d82e24365467"
+    },
+    {
+      "path": "catalog.json",
+      "asset": "catalog.json",
+      "bytes": 7565,
+      "sha256": "f9bc5b093d8c0581c9a902c53f40ad2e917f26a7fc03071281f8ce457e22a7f9"
+    }
+  ]
+}

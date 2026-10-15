@@ -1,0 +1,20 @@
+name: Bug report
+description: Report a reproducible problem using fictional data.
+body:
+  - type: markdown
+    attributes:
+      value: "For security issues, follow SECURITY.md. Do not attach credentials or real client data."
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps and expected result
+      description: Explain what you did, what happened, and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Commit or release, operating system, Node version, and full-app or lightweight cockpit.
+    validations:
+      required: true

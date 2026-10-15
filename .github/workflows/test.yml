@@ -1,0 +1,60 @@
+name: Verify starter
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - name: Verify distributable CLI
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          npm exec --yes --package "$RUNNER_TEMP/leadfactory-os-0.4.0.tgz" -- leadfactory --help
+  full-app:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: 22
+          - os: ubuntu-latest
+            node: 24
+          - os: macos-latest
+            node: 24
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+      LEADFACTORY_DATA_MODE: local
+      NEXT_PUBLIC_LEADFACTORY_DATA_MODE: local
+      LEADFACTORY_CONNECT_DATABASE: '0'
+      LEADFACTORY_ENABLE_EXTERNAL: '0'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install and build through the actual CLI
+        run: node bin/leadfactory.mjs install --no-sops
+      - run: npm run app:test
+      - run: npm run app:typecheck
+      - run: npm run test:http --prefix full-app
+      - run: npm audit --prefix full-app --omit=dev --audit-level=low
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
