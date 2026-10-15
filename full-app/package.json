@@ -11,7 +11,7 @@
     "test:http": "node --test tests/http/*.test.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.78.0",
+    "@anthropic-ai/sdk": "^0.133.0",
     "@fal-ai/client": "^1.9.4",
     "@google/generative-ai": "^0.24.1",
     "apify-client": "2.25.0",
