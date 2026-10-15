@@ -1,6 +1,6 @@
 {
   "name": "leadfactory-os",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Votre agence de lead generation, ses méthodes et votre agent IA : un espace local, prêt à démarrer.",
   "type": "module",
   "bin": {

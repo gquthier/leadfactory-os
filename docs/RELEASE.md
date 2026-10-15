@@ -1,4 +1,14 @@
-# Vérifications de la version 0.4.0 — 15 octobre 2026
+# Correctif 0.4.1 — 15 octobre 2026
+
+La recette publique de 0.4.0 a mis en évidence deux demandes concurrentes de fermeture lors d’un Ctrl-C. Si le serveur attendait encore une connexion HTTP, les deux appels pouvaient tenter de tuer le même groupe de processus et lever `kill EPERM` sur macOS. Le correctif partage une seule promesse de fermeture et n’envoie chaque signal qu’une fois. Un test reproduisant un serveur qui ignore SIGTERM a échoué sur 0.4.0 avec cette même erreur ; il couvre désormais l’arrêt forcé et la concurrence des demandes.
+
+Le correctif passe les **134 tests** du CLI/cockpit. Il a aussi été vérifié avec le vrai serveur Next.js pendant une lecture vidéo ouverte : fermeture concurrente sans erreur, port fermé et autre session préservée.
+
+La version 0.4.1 réutilise la bibliothèque immuable de 0.4.0 et ses mêmes empreintes SHA-256. Il n’est pas nécessaire de télécharger à nouveau les fichiers vérifiés. Les instructions d’installation utilisent le tag 0.4.1.
+
+Le parcours public 0.4.0 a également validé le téléchargement sans identifiants GitHub, le clone, l’onboarding, le contexte de huit rôles et 39 méthodes, les 83 médias, leur reprise après interruption, l’installation automatique et la compilation. Les 15 vidéos sont visibles dans Ressources ; la lecture MP4 avec sous-titres français et chapitres a été constatée dans le navigateur. Les 75 URL de médias requises répondent HTTP 200, la lecture partielle MP4 HTTP 206 et une origine étrangère HTTP 403.
+
+## Vérifications de la version 0.4.0 — 15 octobre 2026
 
 ## Distribution
 

@@ -26,7 +26,7 @@ jobs:
       - name: Verify distributable CLI
         run: |
           npm pack --pack-destination "$RUNNER_TEMP"
-          npm exec --yes --package "$RUNNER_TEMP/leadfactory-os-0.4.0.tgz" -- leadfactory --help
+          npm exec --yes --package "$RUNNER_TEMP/leadfactory-os-0.4.1.tgz" -- leadfactory --help
   full-app:
     runs-on: ${{ matrix.os }}
     strategy:

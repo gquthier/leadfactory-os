@@ -8,7 +8,7 @@ Un espace local pour organiser les clients, préparer les campagnes, suivre les 
 
 [![Vérifications](https://github.com/gquthier/leadfactory-os/actions/workflows/test.yml/badge.svg)](https://github.com/gquthier/leadfactory-os/actions/workflows/test.yml)
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/gquthier/leadfactory-os/releases/tag/v0.4.0)
+[![Version](https://img.shields.io/badge/version-0.4.1-blue)](https://github.com/gquthier/leadfactory-os/releases/tag/v0.4.1)
 
 [Installer](docs/INSTALL.md) · [Comprendre le parcours](docs/FACTORY.md) · [Pour les agents](docs/AGENT-START.md) · [Contribuer](CONTRIBUTING.md)
 
@@ -19,7 +19,7 @@ Un espace local pour organiser les clients, préparer les campagnes, suivre les 
 Avec **Node.js 22.12+ et Git**, sur macOS ou Linux :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.4.0 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.4.1 leadfactory init mon-agence
 ```
 
 Présentez votre agence, choisissez votre assistant et ouvrez votre Factory. Le CLI télécharge le projet, installe ses dépendances, compile l’application, récupère les ressources puis ouvre **Setup**. Votre agent reçoit le brief, les méthodes utiles et la première mission.

@@ -6,7 +6,7 @@ import {join} from 'node:path';
 import {createServer} from 'node:http';
 import {createFactoryApp, workspaceIdentity} from '../lib/factory-runtime.mjs';
 
-async function fixture(t) {
+async function fixture(t, {ignoreTerm=false} = {}) {
   const root = await realpath(await mkdtemp(join(tmpdir(), 'lf-runtime-')));
   t.after(() => rm(root, {recursive: true, force: true}));
   await mkdir(join(root, 'full-app/node_modules/next/dist/bin'), {recursive: true});
@@ -20,7 +20,7 @@ async function fixture(t) {
       res.end(JSON.stringify({app:'leadfactory',mode:process.env.LEADFACTORY_DATA_MODE,workspaceId:id,external:process.env.LEADFACTORY_ENABLE_EXTERNAL,command:process.argv[2]}));
     });
     server.listen(Number(process.argv[process.argv.indexOf('-p')+1]),'127.0.0.1');
-    process.on('SIGTERM',()=>server.close(()=>process.exit(0)));
+    process.on('SIGTERM',()=>{${ignoreTerm?'':'server.close(()=>process.exit(0))'}});
   `);
   const socket = createServer();
   await new Promise(resolve => socket.listen(0, '127.0.0.1', resolve));
@@ -64,4 +64,14 @@ test('Factory reports a failed startup and retains its log instead of waiting fo
   const app = createFactoryApp(root, {port, timeout: 3000, onMessage() {}, prepare:async()=>{}});
   t.after(() => app.stop());
   await assert.rejects(app.start(), /app.log|arrêt/i);
+});
+
+test('concurrent shutdown requests share one completion even when the server ignores SIGTERM',async t=>{
+  const {root,port}=await fixture(t,{ignoreTerm:true});
+  const app=createFactoryApp(root,{port,onMessage(){},prepare:async()=>{}});
+  t.after(()=>app.stop());await app.start();
+  const first=app.stop(),second=app.stop();
+  await Promise.all([first,second]);
+  assert.equal(first,second,'shutdown must be idempotent while waiting for the child');
+  await assert.rejects(fetch(app.url));
 });

@@ -5,7 +5,7 @@ Prévoir **Node.js 22.12+**, **Git**, une connexion Internet et environ **4 Go l
 ## 1. Télécharger et lancer
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.4.0 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.4.1 leadfactory init mon-agence
 ```
 
 Le dossier doit être nouveau. Répondre aux questions sur l’agence et choisir son assistant. Le CLI installe les dépendances verrouillées, compile le logiciel puis ouvre Setup et transmet le contexte à l’agent. Le premier lancement est plus long ; les suivants réutilisent la compilation tant que les sources ne changent pas.
@@ -30,7 +30,7 @@ Le contexte est dans `.leadfactory/`, les données de l’application dans `full
 Les 15 vidéos et leurs documents occupent environ 1,1 Go. Pour les installer plus tard :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.4.0 leadfactory init mon-agence --no-sops
+npx --yes --package github:gquthier/leadfactory-os#v0.4.1 leadfactory init mon-agence --no-sops
 cd mon-agence
 npm run factory -- sops
 ```
@@ -40,7 +40,7 @@ Chaque fichier est contrôlé par taille et SHA-256. Le catalogue est activé un
 ## Installation manuelle et diagnostic
 
 ```sh
-git clone --branch v0.4.0 --single-branch https://github.com/gquthier/leadfactory-os.git mon-agence
+git clone --branch v0.4.1 --single-branch https://github.com/gquthier/leadfactory-os.git mon-agence
 cd mon-agence
 npm run factory -- doctor --json
 npm run factory -- start
