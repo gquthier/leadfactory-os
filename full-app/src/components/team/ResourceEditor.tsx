@@ -318,4 +318,3 @@ export function ResourceEditor({
     </div>
   );
 }
-
