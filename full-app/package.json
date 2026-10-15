@@ -42,7 +42,7 @@
     "tailwind-merge": "^2.5.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.64.0",
     "@types/node": "^22.0.0",
     "@types/nodemailer": "^6.4.23",
     "@types/papaparse": "^5.3.15",
