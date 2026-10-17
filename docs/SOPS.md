@@ -1,6 +1,18 @@
 # Bibliothèque SOP dans Ressources
 
-La page `/admin/resources` combine les ressources attribuées par l’équipe et une bibliothèque locale de tutoriels vidéo. Les catégories distinguent le logiciel et les procédures sans marque d’agence à transmettre aux clients. Chaque vidéo dispose d’une fiche, d’une piste de sous-titres et de chapitres ; le MP4 reste téléchargeable.
+La page `/admin/resources` combine les ressources attribuées par l’équipe et une bibliothèque de tutoriels vidéo. Les catégories distinguent le logiciel et les procédures sans marque d’agence à transmettre aux clients. Chaque paquet local dispose d’une fiche, d’une piste de sous-titres et de chapitres ; le MP4 reste téléchargeable.
+
+## Lecture YouTube et partage
+
+Le lecteur accepte aussi les vidéos hébergées sur YouTube : lecture intégrée, **Copier le lien**, **Ouvrir sur YouTube**, et **Lire le MP4 local** lorsque les médias ont été téléchargés. Le lien copié est une adresse YouTube partageable ; aucune adresse `localhost` n’est proposée aux clients. Les vidéos YouTube apparaissent même sans les MP4 locaux. Les ressources personnelles conservent leur éditeur et leur duplication.
+
+Le catalogue versionné `full-app/resources/sops-youtube.json` associe chaque SOP à son identifiant YouTube réel. Format : `{"version":1,"items":[{"id":"01","title":"Partager un accès Meta","audience":"client","durationSeconds":306,"youtubeVideoId":"IDENTIFIANT_REEL"}]}`. Remplacer la valeur illustrative par les 11 caractères de l’identifiant publié ; les URL complètes et les identifiants malformés sont refusés. Un même `id` fusionne la vidéo hébergée avec les téléchargements locaux, sans doublon. Le catalogue n’accepte aucune URL d’iframe arbitraire.
+
+**État du 17 octobre 2026 :** intégration préparée ; catalogue YouTube vide tant que la publication sur la chaîne White Label n’est pas vérifiée. Aucune vidéo n’est présentée comme publiée sur YouTube. Les 15 vidéos restent distribuées par GitHub et lisibles après téléchargement.
+
+Pour publier : utiliser le compte de la chaîne White Label, téléverser chaque MP4 avec titre français, description et chapitres réels, sous-titres français, autoriser l’intégration, choisir une visibilité publique ou non répertoriée et vérifier la lecture sans connexion. Inscrire ensuite les identifiants vérifiés dans le catalogue et livrer une nouvelle version de l’app. Une vidéo privée n’est pas un lien de partage utilisable par tous les clients. Les chapitres commencent à `00:00`, avec au moins trois entrées espacées de dix secondes minimum.
+
+Références : [visibilité YouTube](https://support.google.com/youtube/answer/157177?hl=fr), [chapitres](https://support.google.com/youtube/answer/9884579?hl=fr), [lecteur intégré](https://developers.google.com/youtube/player_parameters).
 
 Les ressources personnelles restent éditables, conformément à la demande du 15 octobre : le propriétaire (super administrateur) dispose de **Nouvelle ressource** et **Gérer mes ressources** directement sur cette page. L'éditeur d'origine conserve le titre, le type SOP/ressource, le lien Loom, le document, le texte et l'attribution aux membres. **Vos ressources** affiche aussi ses brouillons et ses contenus non attribués. Les autres membres gardent la lecture des ressources publiées qui leur sont attribuées.
 
