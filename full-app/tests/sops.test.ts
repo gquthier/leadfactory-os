@@ -5,6 +5,37 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {loadSops} from '../src/lib/starter-sops';
 
+test('hosted SOPs work without downloaded media and expose only validated YouTube links', async t=>{
+ const root=await mkdtemp(join(tmpdir(),'lf-hosted-sops-'));t.after(()=>rm(root,{recursive:true,force:true}));
+ const hosted=join(root,'hosted.json'),missing=join(root,'not-downloaded');
+ const item={id:'01',title:'Partager un accès Meta',audience:'client',durationSeconds:306,youtubeVideoId:'Abc_123-xyz'};
+ const save=async(items:unknown[])=>writeFile(hosted,JSON.stringify({version:1,items}));
+ await save([item]);
+ const [sop]=await loadSops(missing,hosted);
+ assert.equal(sop.id,'library-01');assert.equal(sop.youtube_video_id,item.youtubeVideoId);
+ assert.equal(sop.youtube_url,'https://www.youtube.com/watch?v=Abc_123-xyz');
+ assert.equal(sop.video_url,undefined);
+ for(const youtubeVideoId of ['javascript:alert(1)','https://evil.test/embed','../../token','short','Abc_123-xyz?autoplay=1']){
+  await save([{...item,youtubeVideoId}]);await assert.rejects(loadSops(missing,hosted),/YouTube/);
+ }
+ await save([item,item]);await assert.rejects(loadSops(missing,hosted),/dupliqué/);
+ await save([{...item,audience:'unknown'}]);await assert.rejects(loadSops(missing,hosted),/invalide/);
+ await save([]);assert.deepEqual(await loadSops(missing,hosted),[]);
+});
+
+test('hosted links augment the matching local SOP without duplicates or losing downloads',async t=>{
+ const root=await mkdtemp(join(tmpdir(),'lf-sops-merge-'));t.after(()=>rm(root,{recursive:true,force:true}));
+ const hosted=join(root,'hosted.json');
+ const files={video:'video.mp4',captions:'captions.vtt',chapters:'chapters.vtt',guide:'FICHE.md'};
+ for(const file of Object.values(files))await writeFile(join(root,file),'fixture');
+ const item={id:'01',title:'Meta',audience:'client',durationSeconds:306};
+ await writeFile(join(root,'catalog.json'),JSON.stringify({version:1,items:[{...item,files}]}));
+ await writeFile(hosted,JSON.stringify({version:1,items:[{...item,youtubeVideoId:'Abc_123-xyz'}]}));
+ const sops=await loadSops(root,hosted);assert.equal(sops.length,1);
+ assert.equal(sops[0].video_url,'/sops/video.mp4');assert.equal(sops[0].guide_url,'/sops/FICHE.md');
+ assert.equal(sops[0].youtube_url,'https://www.youtube.com/watch?v=Abc_123-xyz');
+});
+
 test('library only serves complete local SOP packages and portable links', async t=>{
  const root=await mkdtemp(join(tmpdir(),'lf-sops-'));t.after(()=>rm(root,{recursive:true,force:true}));
  assert.deepEqual(await loadSops(root),[]);
