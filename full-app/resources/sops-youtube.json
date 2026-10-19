@@ -1,4 +1,75 @@
 {
   "version": 1,
-  "items": []
+  "items": [
+    {
+      "id": "01",
+      "title": "Partager l’accès à un compte publicitaire Meta",
+      "audience": "client",
+      "durationSeconds": 306.333333,
+      "youtubeVideoId": "kZri5lS82DY"
+    },
+    {
+      "id": "07",
+      "title": "Utiliser les ressources et la bibliothèque de SOP",
+      "audience": "agency",
+      "durationSeconds": 166.037,
+      "youtubeVideoId": "UjPo3e035YI"
+    },
+    {
+      "id": "08",
+      "title": "Sauvegarder et restaurer l’agence",
+      "audience": "agency",
+      "durationSeconds": 214.549,
+      "youtubeVideoId": "E0UM1cpBCyQ"
+    },
+    {
+      "id": "09",
+      "title": "Préparer un brief client exploitable — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 130.069,
+      "youtubeVideoId": "mSovlnD6X4s"
+    },
+    {
+      "id": "10",
+      "title": "Contrôler les accès et clôturer une mission — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 139.776,
+      "youtubeVideoId": "nrI1fk16LEo"
+    },
+    {
+      "id": "11",
+      "title": "Organiser la réception des leads — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 137.216,
+      "youtubeVideoId": "n6w8xFm0K-U"
+    },
+    {
+      "id": "12",
+      "title": "Contacter rapidement et relancer proprement — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 136.81,
+      "youtubeVideoId": "fh4sq1PZn1M"
+    },
+    {
+      "id": "13",
+      "title": "Qualifier un prospect pendant un appel — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 134.848,
+      "youtubeVideoId": "lMue1V01qIE"
+    },
+    {
+      "id": "14",
+      "title": "Donner un retour qualité utile à l’agence — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 137.8,
+      "youtubeVideoId": "KP5ak6FBPy8"
+    },
+    {
+      "id": "15",
+      "title": "Valider des créatives et une proposition — modèle de procédure",
+      "audience": "client",
+      "durationSeconds": 131.968,
+      "youtubeVideoId": "ct7T3_ScPk4"
+    }
+  ]
 }

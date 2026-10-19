@@ -7,7 +7,7 @@ La Factory rassemble l'application, le contexte de votre agence et les méthodes
 Avec Node.js **22.12 ou plus récent** et Git :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.5.1 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.5.2 leadfactory init mon-agence
 ```
 
 Le parcours affiche quatre étapes : détecter votre assistant, présenter l’agence, enregistrer le contexte et ouvrir le CEO. Renseignez le nom, l’offre, la cible et le premier objectif ; Entrée accepte « à définir avec mon agent » pour les détails. Aucun clic de lancement supplémentaire : le CEO démarre dès la fin de l’onboarding interactif.
@@ -62,7 +62,7 @@ node bin/leadfactory.mjs init ../mon-agence --ref NOM_DE_LA_REVISION
 
 Il refuse d'écraser un dossier existant. La révision doit contenir le CLI, l'application et ses guides. `--no-onboard` permet de télécharger uniquement. Reprendre un dossier existant : `npm run factory -- --project /chemin/mon-agence`.
 
-La commande ci-dessus utilise le tag **v0.5.1** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
+La commande ci-dessus utilise le tag **v0.5.2** du dépôt public, et non un paquet publié sur le registre npm. Le clone contient l’application, les méthodes, les tests et les guides ; le petit paquet lancé par `npx` sert à télécharger ce projet. Aucun compte métier n’est connecté par le téléchargement.
 
 ## Commandes pour les agents
 

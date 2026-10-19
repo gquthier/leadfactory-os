@@ -1,3 +1,13 @@
+# Version 0.5.2 — SOP sur YouTube
+
+Les SOP de Ressources se lisent désormais depuis YouTube : lecteur intégré, **Copier le lien** et **Ouvrir sur YouTube**, avec le MP4 local toujours disponible après téléchargement. Le lien copié est une adresse YouTube publique à transmettre à l’équipe ou aux clients.
+
+Le catalogue `full-app/resources/sops-youtube.json` associe 10 SOP (01 et 07 à 15) à leurs vidéos publiques sur la chaîne White Label, avec titres, chapitres et sous-titres français. Les SOP 02 à 06 restent lues depuis le MP4 local jusqu’à leur publication. La bibliothèque de médias reste celle, immuable, de 0.4.0.
+
+Le README devient la page d’accueil anglaise du projet. Les instructions d’installation utilisent le tag 0.5.2.
+
+---
+
 # Correctif 0.5.1 — ouverture automatique du logiciel
 
 La commande `install` prépare désormais l’application, démarre son serveur, attend une réponse HTTP valide puis ouvre Setup dans le navigateur. Elle reste active pour garder le logiciel disponible ; Ctrl-C arrête seulement sa session. `--no-open` désactive uniquement le navigateur ; `install --no-app --no-sops` conserve une installation qui termine sans démarrer de serveur, notamment pour la CI.
