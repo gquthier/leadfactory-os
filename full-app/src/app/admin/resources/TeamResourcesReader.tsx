@@ -6,11 +6,13 @@ import { AlertCircle, BookOpen, Copy, Download, FileText, Loader2, Pencil, Play,
 import type { TeamResource, TeamResourceKind } from "@/types/index";
 import type {ResourceMember} from "@/components/team/ResourceEditor";
 import {resourceDraft, type ResourceDraft} from "@/lib/team-resources/draft";
+import {SopVideo} from "@/components/resources/SopVideo";
 
 const ResourceEditor = dynamic(() => import("@/components/team/ResourceEditor").then(m => m.ResourceEditor), {loading: () => <p role="status">Chargement de l’éditeur…</p>});
 const TeamResourcesPanel = dynamic(() => import("../team/TeamResourcesPanel").then(m => m.TeamResourcesPanel), {loading: () => <p role="status">Chargement des ressources…</p>});
 
-type ResourceItem = TeamResource & Partial<{assignee_ids:string[];video_url:string;captions_url:string;chapters_url:string;guide_url:string;poster_url:string;audience:"client"|"agency";duration_seconds:number}>;
+type ResourceItem = TeamResource & Partial<{assignee_ids:string[];video_url:string;youtube_video_id:string;captions_url:string;chapters_url:string;guide_url:string;poster_url:string;audience:"client"|"agency";duration_seconds:number}>;
+const isLibraryVideo=(resource:ResourceItem)=>Boolean(resource.video_url||resource.youtube_video_id);
 
 function kindBadge(kind: TeamResourceKind) {
   return kind === "sop"
@@ -50,7 +52,7 @@ export function TeamResourcesReader({canManage = false, members = []}: {canManag
   // SOP d'abord, puis ressources écrites, en respectant order_index.
   const sorted = useMemo(() => {
     const rank = (k: TeamResourceKind) => (k === "sop" ? 0 : 1);
-    return resources.filter(resource=>audience==="all"||(audience==="custom"?!resource.video_url:resource.audience===audience)).sort(
+    return resources.filter(resource=>audience==="all"||(audience==="custom"?!isLibraryVideo(resource):resource.audience===audience)).sort(
       (a, b) => rank(a.kind) - rank(b.kind) || a.order_index - b.order_index,
     );
   }, [resources,audience]);
@@ -77,7 +79,7 @@ export function TeamResourcesReader({canManage = false, members = []}: {canManag
       </div>
 
       {canManage && managing ? <TeamResourcesPanel key={reload} members={members}/> : <>
-      <div className="flex flex-wrap gap-2" aria-label="Catégories de ressources">{[["all","Tout"],["agency","Logiciel"],["client","À transmettre aux clients"],["custom","Vos ressources"]].map(([id,label])=><button key={id} aria-pressed={audience===id} onClick={()=>setAudience(id)} className={audience===id?"btn-primary":"btn-secondary"}>{label} <span className="ml-1 text-xs">({resources.filter(item=>id==="all"||(id==="custom"?!item.video_url:item.audience===id)).length})</span></button>)}</div>
+      <div className="flex flex-wrap gap-2" aria-label="Catégories de ressources">{[["all","Tout"],["agency","Logiciel"],["client","À transmettre aux clients"],["custom","Vos ressources"]].map(([id,label])=><button key={id} aria-pressed={audience===id} onClick={()=>setAudience(id)} className={audience===id?"btn-primary":"btn-secondary"}>{label} <span className="ml-1 text-xs">({resources.filter(item=>id==="all"||(id==="custom"?!isLibraryVideo(item):item.audience===id)).length})</span></button>)}</div>
 
       {err && (
         <div className="flex items-start gap-2 border-3 border-red-400 bg-red-50 p-3 text-sm font-bold text-red-700">
@@ -157,12 +159,7 @@ export function TeamResourcesReader({canManage = false, members = []}: {canManag
                   </button>
                 </div>
 
-                {active.video_url && <video key={active.id} controls playsInline preload="metadata" poster={active.poster_url} className="w-full bg-white" aria-label={active.title}>
-                  <source src={active.video_url} type="video/mp4"/>
-                  {active.captions_url&&<track kind="subtitles" src={active.captions_url} srcLang="fr" label="Français"/>}
-                  {active.chapters_url&&<track kind="chapters" src={active.chapters_url} srcLang="fr" label="Chapitres" default/>}
-                  Votre navigateur ne prend pas en charge la vidéo. Téléchargez le MP4 ci-dessous.
-                </video>}
+                {isLibraryVideo(active) && <SopVideo key={active.id} title={active.title} youtubeVideoId={active.youtube_video_id} videoUrl={active.video_url} captionsUrl={active.captions_url} chaptersUrl={active.chapters_url} posterUrl={active.poster_url}/>}
                 {/* Player Loom */}
                 {active.loom_url && (
                   <div className="relative w-full bg-black" style={{ paddingBottom: "62.5%" }}>
@@ -178,18 +175,18 @@ export function TeamResourcesReader({canManage = false, members = []}: {canManag
 
                 {/* Contenu sous la vidéo */}
                 <div className="space-y-4 p-5">
-                  {canManage && !active.video_url && <div className="flex flex-wrap gap-2">
+                  {canManage && !isLibraryVideo(active) && <div className="flex flex-wrap gap-2">
                     <button type="button" className="btn-secondary text-sm" onClick={()=>editResource(active)}><Pencil className="h-4 w-4"/> Modifier</button>
                     <button type="button" className="btn-secondary text-sm" onClick={()=>editResource(active,true)}><Copy className="h-4 w-4"/> Dupliquer</button>
                   </div>}
-                  {active.video_url&&<>
+                  {isLibraryVideo(active)&&<>
                     <p className="text-sm font-medium">{active.audience==="client"?"Procédure en français, sans marque d’agence, à transmettre à vos clients.":"Tutoriel pas à pas pour utiliser votre logiciel."}</p>
                     {active.body_text&&<p className="text-sm">{active.body_text}</p>}
                     <div className="flex flex-wrap gap-2">
-                      <a className="btn-primary text-sm" href={active.video_url} download><Download className="h-4 w-4"/> Télécharger la vidéo</a>
-                      <a className="btn-secondary text-sm" href={active.guide_url} download>Fiche SOP</a>
-                      <a className="btn-secondary text-sm" href={active.captions_url} download>Sous-titres</a>
-                      <a className="btn-secondary text-sm" href={active.chapters_url} download>Chapitres</a>
+                      {active.video_url&&<a className="btn-primary text-sm" href={active.video_url} download><Download className="h-4 w-4"/> Télécharger la vidéo</a>}
+                      {active.guide_url&&<a className="btn-secondary text-sm" href={active.guide_url} download>Fiche SOP</a>}
+                      {active.captions_url&&<a className="btn-secondary text-sm" href={active.captions_url} download>Sous-titres</a>}
+                      {active.chapters_url&&<a className="btn-secondary text-sm" href={active.chapters_url} download>Chapitres</a>}
                     </div>
                   </>}
                   {/* Lien document */}
@@ -213,7 +210,7 @@ export function TeamResourcesReader({canManage = false, members = []}: {canManag
                     />
                   )}
 
-                  {!active.video_url && !active.loom_url &&
+                  {!isLibraryVideo(active) && !active.loom_url &&
                     !active.document_url &&
                     (!active.body_html || active.body_html.trim() === "") && (
                       <p className="text-sm font-medium text-lf-gray">
