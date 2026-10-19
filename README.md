@@ -285,7 +285,7 @@ MIT license. Fork it. Rebrand it. Sell the service.<br>
 [![STAR IT](https://img.shields.io/github/stars/gquthier/leadfactory-os?style=for-the-badge&label=STAR%20IT&color=0B0C0F)](https://github.com/gquthier/leadfactory-os/stargazers)
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.5.1 leadfactory init my-agency
+npx --yes --package github:gquthier/leadfactory-os#v0.5.2 leadfactory init my-agency
 ```
 
 <sub>Node.js 22.12+ and Git · macOS or Linux · one command installs the software, the 23 skills and the 15 video SOPs.</sub>

@@ -5,7 +5,7 @@ Prévoir **Node.js 22.12+**, **Git**, une connexion Internet et environ **4 Go l
 ## 1. Télécharger et lancer
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.5.1 leadfactory init mon-agence
+npx --yes --package github:gquthier/leadfactory-os#v0.5.2 leadfactory init mon-agence
 ```
 
 Le dossier doit être nouveau. Le CLI affiche l’installation, détecte Codex et Claude Code et leurs sessions, puis demande quatre informations sur l’agence. Si les deux assistants sont installés, choisir celui à utiliser ; sinon l’outil présent est sélectionné automatiquement. Le CEO s’ouvre dès le brief enregistré avec le contexte et le prompt de setup.
@@ -32,7 +32,7 @@ Le contexte est dans `.leadfactory/`, les données de l’application dans `full
 Les 15 vidéos et leurs documents occupent environ 1,1 Go. Pour les installer plus tard :
 
 ```sh
-npx --yes --package github:gquthier/leadfactory-os#v0.5.1 leadfactory init mon-agence --no-sops
+npx --yes --package github:gquthier/leadfactory-os#v0.5.2 leadfactory init mon-agence --no-sops
 cd mon-agence
 npm run factory -- sops
 ```
@@ -42,7 +42,7 @@ Chaque fichier est contrôlé par taille et SHA-256. Le catalogue est activé un
 ## Installation manuelle et diagnostic
 
 ```sh
-git clone --branch v0.5.1 --single-branch https://github.com/gquthier/leadfactory-os.git mon-agence
+git clone --branch v0.5.2 --single-branch https://github.com/gquthier/leadfactory-os.git mon-agence
 cd mon-agence
 npm run factory -- doctor --json
 npm run factory -- start
