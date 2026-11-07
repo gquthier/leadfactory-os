@@ -1,5 +1,7 @@
 # Frameworks de référence
 
+Ces frameworks servent à remplir les parties du [cadre VSL en 5 parties](cadre-vsl-5-parties.md) (intro, ancienne méthode contre nouvelle, FAQ en boucle, petit CTA, salade de preuves). Ils ne remplacent jamais sa structure.
+
 ## Niveaux de conscience (Schwartz)
 
 1. Unaware → ouvrir par l'identification du problème, une histoire.
