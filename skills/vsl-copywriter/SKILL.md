@@ -19,6 +19,28 @@ Chaque VSL suit ce cadre, dans cet ordre, quel que soit le mode. Détail, exempl
 
 Les autres frameworks servent à remplir ces parties, jamais à les remplacer. Le mode ne change que la durée, le ton et le format.
 
+**Règles non négociables**
+
+- Aucune autre section que ces 5 parties. Jamais de section « Offre », « Prix », « Garantie », « Bénéfices » ou « Urgence » à part : ce sont des **questions de la FAQ** (« Qu'est-ce que j'obtiens exactement ? », « Combien ça coûte ? », « Et si ça ne marche pas pour moi ? »).
+- FAQ : au moins **3 questions en B2B, 6 en VSL longue**. Chaque question écrit ses **4 temps, dans l'ordre** : ce qu'il pense, pourquoi c'est faux, ce qui est vrai, preuve (ou `[PREUVE À FOURNIR : …]`).
+- Le CTA pose **toujours une question de personnalisation** à laquelle la personne répond en passant à l'action (« Réservez votre appel et indiquez combien de projets vous signez par mois »). Un CTA sans cette question est à réécrire.
+- Après le CTA : **uniquement des preuves**, aucun nouvel argument.
+
+**Squelette à reproduire** (titres adaptés au format du mode) :
+
+```
+1. Intro — promesse · douleur · preuve(s) · plan · projection
+2. Ancienne méthode contre nouvelle — ce que fait le marché, pourquoi ça plafonne → nom du mécanisme
+3. FAQ
+   Q1 « … ? »  — ce qu'il pense / pourquoi c'est faux / ce qui est vrai / preuve
+   Q2 « Qu'est-ce que j'obtiens exactement ? »  — offre et stack, 4 temps
+   Q3 « Combien ça coûte ? »  — prix ancré, 4 temps
+   Q4 « Et si ça ne marche pas pour moi ? »  — garantie, 4 temps
+   … jusqu'à ce que toutes les objections soient levées
+4. CTA — action unique + question de personnalisation
+5. Preuves — uniquement des preuves jusqu'à la fin
+```
+
 ## Entrées
 
 - `{CLIENT_DIR}/01-deep-search/` : `01-market-awareness.md`, `02-competitor-research.md`, `03-psychographic.md`. Manquants → proposer de lancer `deep-search`, ou continuer sur les seules informations fournies en marquant les hypothèses.
